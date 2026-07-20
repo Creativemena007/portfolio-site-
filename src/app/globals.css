@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+/*
+  Design tokens for the Portfolio Redesign 26 (from Figma).
+  Colors and type scale mirror the source design.
+*/
+@theme {
+  /* Surfaces */
+  --color-bg: #101010;
+  --color-surface: #1c1b18;
+  --color-surface-2: #131310;
+  /* Card hover — a subtle warm-white overlay (~5%) rather than a solid tint,
+     so the lift stays gentle over the near-black bg. */
+  --color-surface-hover: rgb(253 252 248 / 0.05);
+
+  /* Text */
+  --color-cream: #fdfcf8;
+  --color-cream-dim: #f3f0e9;
+  --color-muted: #a0a09d;
+  --color-muted-2: #888888;
+  --color-label: #726f64;
+  --color-italic: #afa88b;
+
+  /* Accent */
+  --color-accent: #f58404;
+
+  /* Type — Neue Haas Grotesk Display Pro, self-hosted via next/font/local
+     (see src/app/layout.tsx and src/app/fonts). */
+  --font-sans: var(--font-neue-haas), "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+/* -------------------------------------------------------------------------
+   Motion vocabulary
+   Raw custom props (not @theme) so they can be used inside `animation`
+   shorthands and keyframes. Every motion below is gated on
+   prefers-reduced-motion so reduced-motion users get the settled UI with
+   no movement.
+   ------------------------------------------------------------------------- */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* A quick, rare hop — most of the cycle is at rest, with one small bounce
+   near the end to signal the avatar is interactive. */
+@keyframes avatar-nudge {
+  0%,
+  82%,
+  100% {
+    transform: translateY(0);
+  }
+  88% {
+    transform: translateY(-7px);
+  }
+  94% {
+    transform: translateY(0);
+  }
+}
+
+/* iOS "slide to unlock" shine — a bright silver band sweeps across the text
+   then rests, on a loop. */
+@keyframes text-shimmer {
+  0% {
+    background-position: -150% 0;
+  }
+  55%,
+  100% {
+    background-position: 250% 0;
+  }
+}
+
+/* Silver status text. Base is a flat silver so reduced-motion users (and the
+   brief moment before the animation kicks in) still read clean silver; the
+   animated gradient shine is layered on in the no-preference block below. */
+.shimmer-text {
+  color: #c9c9ce;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1 — above-the-fold load entrance (staggered) */
+  .enter {
+    animation: enter-up 500ms var(--ease-out) both;
+  }
+  .enter-d1 {
+    animation-delay: 60ms;
+  }
+  .enter-d2 {
+    animation-delay: 140ms;
+  }
+  .enter-d3 {
+    animation-delay: 220ms;
+  }
+  .enter-d4 {
+    animation-delay: 300ms;
+  }
+
+  /* 2 — scroll-reveal (see components/reveal.tsx) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+  }
+  .reveal[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+  }
+  .reveal-stagger[data-visible="true"] > * {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal-stagger[data-visible="true"] > *:nth-child(2) {
+    transition-delay: 50ms;
+  }
+  .reveal-stagger[data-visible="true"] > *:nth-child(3) {
+    transition-delay: 100ms;
+  }
+  .reveal-stagger[data-visible="true"] > *:nth-child(4) {
+    transition-delay: 150ms;
+  }
+
+  /* 3 — card press feedback (background hover + snappy press scale) */
+  .card-press {
+    transition: background-color 300ms var(--ease-out),
+      transform 160ms var(--ease-out);
+  }
+  .card-press:active {
+    transform: scale(0.985);
+  }
+
+  /* 4 — "currently…" status dot: a slow, peripheral breathe */
+  .breathe {
+    animation: breathe 2.4s var(--ease-in-out) infinite;
+  }
+
+  /* 5 — avatar idle nudge (roughly once every ~5.5s) */
+  .avatar-nudge {
+    animation: avatar-nudge 5.5s var(--ease-out) infinite;
+  }
+
+  /* 6 — status text: iOS slide-to-unlock silver shimmer */
+  .shimmer-text {
+    background: linear-gradient(
+      100deg,
+      #6b6b70 0%,
+      #6b6b70 42%,
+      #f4f4f7 50%,
+      #6b6b70 58%,
+      #6b6b70 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: text-shimmer 4s var(--ease-in-out) infinite;
+  }
+}
+
+/* Card hover color still transitions under reduced motion — just no scale. */
+@media (prefers-reduced-motion: reduce) {
+  .card-press {
+    transition: background-color 300ms ease;
+  }
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+}
