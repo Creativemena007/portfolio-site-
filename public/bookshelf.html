@@ -700,6 +700,20 @@
     .book3d.moving{transition:none}
   }
 </style>
+  <!-- Agentation dev feedback toolbar — CDN-loaded, localhost only.
+       The import map is inert until the guarded module below runs, so nothing
+       is fetched and no toolbar renders in production. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@19.2.4",
+      "react-dom": "https://esm.sh/react-dom@19.2.4",
+      "react-dom/client": "https://esm.sh/react-dom@19.2.4/client",
+      "react/jsx-runtime": "https://esm.sh/react@19.2.4/jsx-runtime",
+      "agentation": "https://esm.sh/agentation@3.0.2?external=react,react-dom"
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -710,7 +724,7 @@
         <polyline points="136 96 88 48 40 96" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
         <polyline points="232 192 88 192 88 48" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      Go back home
+      Home
     </a>
     <button class="nav-close" id="closeBtn" type="button">
       Put it back
@@ -785,7 +799,7 @@ const books = [
     spineHTML:`<span class="spine-real sp-mena"><span class="m-title">don\u2019t grow up</span><span class="m-author">Orezi Mena</span></span>`,
     coverHTML:`<div class="dgu-cover"><div class="dgu-title"><span class="w">d<span class="c-yellow">o</span>n\u2019t</span><span class="w">gr<span class="c-pink">o</span>w</span><span class="w"><span class="c-mint">u</span>p</span></div><div class="dgu-author">orezi mena</div></div>`,
     note:'This one is mine. Everything I believe about play, honest connection, and refusing to let adulthood flatten you — the thesis behind The Playground, between two covers. Not a guide on how to succeed; a reminder of how to feel again.',
-    link:'#'
+    link:'https://www.amazon.com/dp/B0GFG5FFK1'
   },
   {
     id:'t-show', title:'Show your work!', author:'Austin Kleon', year:'2014', genre:'Sharing',
@@ -1044,5 +1058,20 @@ document.addEventListener('keydown', e=>{
   else if(phase === 'idle'){ window.location.href = '/'; }
 });
 </script>
+  <script type="module">
+    // Mount Agentation only on localhost so it never ships to production.
+    if (["localhost", "127.0.0.1"].includes(location.hostname)) {
+      try {
+        const { createElement } = await import("react");
+        const { createRoot } = await import("react-dom/client");
+        const { Agentation } = await import("agentation");
+        const root = document.createElement("div");
+        document.body.appendChild(root);
+        createRoot(root).render(createElement(Agentation));
+      } catch (e) {
+        console.error("Agentation failed to load", e);
+      }
+    }
+  </script>
 </body>
 </html>

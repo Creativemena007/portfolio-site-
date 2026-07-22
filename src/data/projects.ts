@@ -281,7 +281,7 @@ export const PROJECTS: Project[] = [
     img: "work-zo",
     title: "Zo",
     headline: "Zo: From Crypto Communities to AI Conversations",
-    category: "BLOCKCHAIN // AI",
+    category: "CHAT // AI",
     description:
       "How design guided a product through multiple reinventions. Zo’s journey was anything but linear — what began as an ambitious attempt to simplify governance for DAOs evolved into a crypto-native chat app, and ultimately reinvented itself as an AI conversation platform with over 100k+ downloads and a 4.0★ rating on Google Play.",
     visitUrl:
@@ -289,7 +289,7 @@ export const PROJECTS: Project[] = [
     meta: [
       { label: "Timeline", value: "2023 – 2024" },
       { label: "Role", value: "Sole Product & Interaction Designer" },
-      { label: "Industry", value: "Crypto / AI" },
+      { label: "Industry", value: "Chat / AI" },
       { label: "Platform", value: "iOS & Android" },
     ],
     content: [

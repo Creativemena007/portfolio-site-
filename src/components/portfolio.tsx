@@ -48,16 +48,16 @@ export function WorkCard({ work }: { work: Work }) {
   return (
     <Link
       href={`/work/${work.slug}`}
-      className="group card-press block rounded-[22px] p-3 hover:bg-surface-hover"
+      className="group card-press block rounded-[22px] hover:bg-surface-hover md:p-3"
     >
       <div className="aspect-[543/475] w-full overflow-hidden rounded-t-[20px]">
         <img
           src={`/images/${work.img}.png`}
           alt={work.title}
-          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.04]"
         />
       </div>
-      <div className="mt-3 flex items-center justify-between gap-4 px-5">
+      <div className="mt-3 flex items-center justify-between gap-4 md:px-5">
         <span className="text-[16px] font-medium uppercase tracking-[-0.01em] text-cream">
           {work.title}
         </span>
@@ -108,7 +108,7 @@ export function ListRow({
     <a
       href={item.href ?? "#"}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-      className="group card-press relative flex w-full items-center gap-3 rounded-[20px] p-3 hover:bg-surface-hover"
+      className="group card-press relative flex w-full items-center gap-3 rounded-[20px] hover:bg-surface-hover md:p-3"
     >
       <div
         className={`${thumbSize} shrink-0 overflow-hidden rounded-l-[16px] ${thumbClasses(
@@ -119,7 +119,7 @@ export function ListRow({
           <img
             src={`/images/${item.img}.${item.imgExt ?? "png"}`}
             alt={item.title}
-            className={`h-full w-full transition-transform duration-500 ease-out group-hover:scale-[1.06] ${
+            className={`h-full w-full transition-transform duration-300 ease-out group-hover:scale-[1.06] ${
               item.variant === "white-contain"
                 ? "object-contain"
                 : "object-cover"

@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import { Agentation } from "agentation";
 import "./globals.css";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+  TWITTER_HANDLE,
+} from "@/config/site";
 
 // Neue Haas Grotesk Display Pro — the source design font, self-hosted from src/app/fonts.
 const neueHaas = localFont({
@@ -20,9 +28,58 @@ const neueHaas = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Mena — Designer, author, and a curious human",
-  description:
-    "Designer, author, and a curious human. Interested in what we build and how it shapes us.",
+  metadataBase: new URL(SITE_URL),
+  // Home uses the default; every other page renders "<page title> — Mena".
+  title: {
+    default: SITE_TITLE,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: `${SITE_NAME} — Portfolio`,
+  authors: [{ name: "Orezi Mena", url: SITE_URL }],
+  creator: "Orezi Mena",
+  publisher: "Orezi Mena",
+  keywords: [
+    "Mena",
+    "Orezi Mena",
+    "thecreativemena",
+    "product designer",
+    "UX designer",
+    "UI designer",
+    "design engineer",
+    "portfolio",
+    "fintech design",
+    "blockchain design",
+    "web3 design",
+    "climate tech design",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    creator: TWITTER_HANDLE,
+    site: TWITTER_HANDLE,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -41,6 +98,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full antialiased">
         {children}
+        <Analytics />
         {process.env.NODE_ENV === "development" && <Agentation />}
       </body>
     </html>

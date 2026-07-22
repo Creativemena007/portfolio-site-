@@ -24,9 +24,32 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) return {};
+
+  const description =
+    project.description || `${project.title} — a case study by Mena.`;
+  const url = `/work/${slug}`;
+  // Prefer the case-study hero; fall back to the home-grid thumbnail.
+  const ogImage = project.hero ?? `/images/${project.img}.png`;
+  const ogTitle = `${project.title} — Mena`;
+
   return {
-    title: `${project.title} — Mena`,
-    description: project.description || undefined,
+    // The root title template renders this as "<title> — Mena".
+    title: project.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      title: ogTitle,
+      description,
+      url,
+      images: [{ url: ogImage, alt: ogTitle }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description,
+      images: [ogImage],
+    },
   };
 }
 
@@ -174,7 +197,7 @@ export default async function ProjectPage({
             className="flex items-center gap-2.5 transition-colors hover:text-cream"
           >
             <ArrowBack />
-            Go back home
+            Home
           </Link>
           <Link
             href={`/work/${next.slug}`}
@@ -254,13 +277,28 @@ export default async function ProjectPage({
         <footer className="mt-24 flex flex-col gap-5 text-[16px] tracking-normal sm:flex-row sm:items-center sm:justify-between">
           <p className="font-medium text-cream">&copy; 2026 Thecreativemena</p>
           <nav className="flex items-center gap-[30px] text-muted-2">
-            <a href="#" className="hover:text-cream">
+            <a
+              href="https://github.com/user-attachments/files/24366703/MENA.CV.2026.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-cream"
+            >
               Resume
             </a>
-            <a href="#" className="hover:text-cream">
+            <a
+              href="https://www.linkedin.com/in/thecreativemena/"
+              target="_blank"
+              rel="noreferrer"
+              className="transition-colors hover:text-cream"
+            >
               Linkedin
             </a>
-            <a href="#" className="hover:text-cream">
+            <a
+              href="https://x.com/Thecreativemena"
+              target="_blank"
+              rel="noreferrer"
+              className="transition-colors hover:text-cream"
+            >
               Twitter (X)
             </a>
           </nav>

@@ -33,7 +33,7 @@ const SIDE_QUEST: ListItem[] = [
     title: "Don’t Grow Up",
     subtitle:
       "A book about adulthood, curiosity and the parts of ourselves worth protecting.",
-    href: "https://www.amazon.com/Dont-Grow-Up-Rediscovering-wonder/dp/B0GFG5FFK1/ref=tmm_pap_swatch_0?_encoding=UTF8&dib_tag=se&dib=eyJ2IjoiMSJ9.gO7hfji533wYlB9QstsptQ.O4PCHEH0Y1e39xMiumNaQPVK9Uqx7kdkWQQec91z6QA&qid=1784554473&sr=8-1",
+    href: "https://www.amazon.com/dp/B0GFG5FFK1",
   },
   {
     img: "playground",
@@ -50,6 +50,7 @@ const SIDE_QUEST: ListItem[] = [
     title: "Life away from the screen",
     subtitle:
       "Long runs, heavy lifts, unfamiliar places and the moments between them.",
+    href: "/life-away.html",
   },
 ];
 
@@ -63,7 +64,8 @@ const BONUS: ListItem[] = [
   },
   {
     img: "book-recs",
-    variant: "white-cover",
+    imgExt: "webp",
+    variant: "cover",
     title: "Book Recommendations",
     subtitle: "Books that have shaped me",
     href: "/bookshelf.html",
@@ -125,7 +127,7 @@ export default function Home() {
                         target="_blank"
                         rel="noreferrer"
                         aria-label={s.label}
-                        className="group/social flex size-[37px] shrink-0 items-center justify-center rounded-full bg-surface-2 transition-[background-color,transform] duration-200 ease-out hover:scale-105 hover:bg-white/[0.12]"
+                        className="group/social flex size-[37px] shrink-0 items-center justify-center rounded-full bg-surface-2 transition-[background-color,transform] duration-200 ease-out hover:scale-105 hover:bg-white/[0.12] active:scale-95"
                       >
                         <img
                           src={`/images/${s.icon}.svg`}
@@ -139,13 +141,13 @@ export default function Home() {
               </div>
 
               {/* Bio */}
-              <div className="enter enter-d2 flex flex-col gap-3">
-                <h1 className="text-[22px] font-medium leading-[1.15] tracking-[-0.015em] text-cream-dim md:text-[26px]">
+              <div className="enter enter-d2 flex flex-col gap-5">
+                <h1 className="text-[22px] font-medium leading-[1.3] tracking-[-0.015em] text-cream-dim md:text-[26px]">
                   Designer, author, and a curious human.
                   <br />
                   Interested in what we build and how it shapes us.
                 </h1>
-                <div className="flex flex-col gap-4 text-[15px] leading-[1.6] tracking-normal text-muted md:text-[16px]">
+                <div className="flex flex-col gap-5 text-[15px] leading-[1.75] tracking-normal text-muted md:text-[16px]">
                   <p>
                     For over six years, I&rsquo;ve designed products across AI,
                     fintech, climate and blockchain, working with teams behind{" "}
@@ -279,7 +281,12 @@ export default function Home() {
         <footer className="mt-24 flex flex-col gap-5 text-[16px] tracking-normal sm:flex-row sm:items-center sm:justify-between md:mt-40">
           <p className="font-medium text-cream">&copy; 2026 Thecreativemena</p>
           <nav className="flex items-center gap-[30px] text-muted-2">
-            <a href="#" className="transition-colors hover:text-cream">
+            <a
+              href="https://github.com/user-attachments/files/24366703/MENA.CV.2026.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="transition-colors hover:text-cream"
+            >
               Resume
             </a>
             <a

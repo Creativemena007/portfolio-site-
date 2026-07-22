@@ -29,6 +29,12 @@
   /* Type — Neue Haas Grotesk Display Pro, self-hosted via next/font/local
      (see src/app/layout.tsx and src/app/fonts). */
   --font-sans: var(--font-neue-haas), "Helvetica Neue", Arial, sans-serif;
+
+  /* Easing — strong custom curves. In @theme so Tailwind's `ease-out` /
+     `ease-in-out` utilities use these across the app (the built-ins are too
+     weak), while var(--ease-*) still resolves for the keyframes below. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 html {
@@ -38,16 +44,11 @@ html {
 
 /* -------------------------------------------------------------------------
    Motion vocabulary
-   Raw custom props (not @theme) so they can be used inside `animation`
-   shorthands and keyframes. Every motion below is gated on
+   --ease-out / --ease-in-out are defined in @theme above (so they also power
+   Tailwind's easing utilities). Every motion below is gated on
    prefers-reduced-motion so reduced-motion users get the settled UI with
    no movement.
    ------------------------------------------------------------------------- */
-:root {
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-}
-
 @keyframes enter-up {
   from {
     opacity: 0;
