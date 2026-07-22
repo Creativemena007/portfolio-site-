@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 // Home-page social share card (also used as the default Twitter image).
+// Intentionally imagery-free: a single "M" monogram, white on brand black.
 export const alt = "Mena — Designer, author, and a curious human";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -13,10 +14,10 @@ export default function OpengraphImage() {
           height: "100%",
           width: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
           background: "#101010",
-          padding: 88,
           color: "#fdfcf8",
           fontFamily: "sans-serif",
         }}
@@ -24,30 +25,24 @@ export default function OpengraphImage() {
         <div
           style={{
             display: "flex",
+            fontSize: 440,
+            fontWeight: 700,
+            lineHeight: 1,
+            letterSpacing: -12,
+          }}
+        >
+          M
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 56,
+            display: "flex",
             fontSize: 26,
-            letterSpacing: 10,
+            letterSpacing: 2,
             color: "#726f64",
           }}
         >
-          PORTFOLIO
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", fontSize: 128, fontWeight: 700 }}>
-            Mena
-          </div>
-          <div
-            style={{
-              display: "flex",
-              fontSize: 44,
-              color: "#a0a09d",
-              marginTop: 20,
-              maxWidth: 920,
-            }}
-          >
-            Designer, author, and a curious human.
-          </div>
-        </div>
-        <div style={{ display: "flex", fontSize: 26, color: "#888888" }}>
           thecreativemena.com
         </div>
       </div>
