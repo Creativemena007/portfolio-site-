@@ -9,9 +9,11 @@
   --color-bg: #101010;
   --color-surface: #1c1b18;
   --color-surface-2: #131310;
-  /* Card hover — a subtle warm-white overlay (~5%) rather than a solid tint,
-     so the lift stays gentle over the near-black bg. */
-  --color-surface-hover: rgb(253 252 248 / 0.05);
+  /* Card hover — a gentle warm-white overlay (~4.5%) rather than a solid or
+     cool tint, so the lift catches light like a material over the near-black
+     bg without shouting. Use via `hover:bg-surface-hover` (never a raw
+     `white/10`, which reads cold and too strong against the cream palette). */
+  --color-surface-hover: rgb(253 252 248 / 0.045);
 
   /* Text */
   --color-cream: #fdfcf8;
@@ -50,6 +52,13 @@ html {
   from {
     opacity: 0;
     transform: translateY(8px);
+  }
+}
+
+/* Route crossfade — replayed on every navigation via app/template.tsx. */
+@keyframes route-fade {
+  from {
+    opacity: 0;
   }
 }
 
@@ -99,6 +108,11 @@ html {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* 0 — route crossfade on navigation (see app/template.tsx) */
+  .route-fade {
+    animation: route-fade 220ms var(--ease-out) both;
+  }
+
   /* 1 — above-the-fold load entrance (staggered) */
   .enter {
     animation: enter-up 500ms var(--ease-out) both;
@@ -145,9 +159,11 @@ html {
     transition-delay: 150ms;
   }
 
-  /* 3 — card press feedback (background hover + snappy press scale) */
+  /* 3 — card press feedback (background hover + snappy press scale)
+     Hover fill responds fast (~180ms) so it feels immediate, not laggy;
+     the press scale stays snappy at 160ms. */
   .card-press {
-    transition: background-color 300ms var(--ease-out),
+    transition: background-color 180ms var(--ease-out),
       transform 160ms var(--ease-out);
   }
   .card-press:active {
@@ -185,12 +201,20 @@ html {
 /* Card hover color still transitions under reduced motion — just no scale. */
 @media (prefers-reduced-motion: reduce) {
   .card-press {
-    transition: background-color 300ms ease;
+    transition: background-color 180ms ease;
   }
 }
 
 body {
-  background: var(--color-bg);
+  background-color: var(--color-bg);
+  /* Subtle dot-grid texture across the whole site (same as the bookshelf).
+     Page <main>s are transparent so this shows through everywhere. */
+  background-image: radial-gradient(
+    circle,
+    rgb(255 255 255 / 0.035) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
   color: var(--color-cream);
   font-family: var(--font-sans);
 }

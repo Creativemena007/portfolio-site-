@@ -17,7 +17,7 @@ const ARROW_RIGHT = "/images/icon-arrow-diag.svg";
 
 export function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[16px] font-medium uppercase leading-[1.5] tracking-[5.28px] text-label">
+    <p className="text-[13px] font-medium uppercase leading-[1.5] tracking-[4.2px] text-label">
       {children}
     </p>
   );
@@ -30,7 +30,7 @@ function thumbClasses(variant: ThumbVariant) {
     case "white-cover":
       return "bg-white";
     case "white-contain":
-      return "bg-white p-3";
+      return "bg-white p-2.5";
     case "placeholder":
       return "bg-[#d9d9d9]";
     default:
@@ -48,21 +48,21 @@ export function WorkCard({ work }: { work: Work }) {
   return (
     <Link
       href={`/work/${work.slug}`}
-      className="group card-press block rounded-[28px] p-4 hover:bg-white/10"
+      className="group card-press block rounded-[22px] p-3 hover:bg-surface-hover"
     >
-      <div className="aspect-[543/475] w-full overflow-hidden rounded-t-[24px]">
+      <div className="aspect-[543/475] w-full overflow-hidden rounded-t-[20px]">
         <img
           src={`/images/${work.img}.png`}
           alt={work.title}
           className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
         />
       </div>
-      <div className="mt-4 flex items-center justify-between gap-4 px-6">
-        <span className="text-[20px] font-medium uppercase tracking-[0.03em] text-cream">
+      <div className="mt-3 flex items-center justify-between gap-4 px-5">
+        <span className="text-[16px] font-medium uppercase tracking-[-0.01em] text-cream">
           {work.title}
         </span>
         <div className="flex items-center">
-          <span className="whitespace-nowrap text-[20px] tracking-[0.03em] text-label transition-colors duration-300 group-hover:text-cream-dim">
+          <span className="whitespace-nowrap text-[16px] tracking-normal text-label transition-colors duration-300 group-hover:text-cream-dim">
             {work.category}
           </span>
           {/* Arrow sits beside the label, collapsed to zero width by default;
@@ -73,7 +73,7 @@ export function WorkCard({ work }: { work: Work }) {
                 src={ARROW_RIGHT}
                 alt=""
                 aria-hidden
-                className="ml-2.5 h-[22px] w-[22px] max-w-none rotate-90 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                className="ml-2 h-[18px] w-[18px] max-w-none rotate-90 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
             </span>
           </span>
@@ -102,16 +102,16 @@ export function ListRow({
   size?: "sm" | "lg";
 }) {
   const thumbSize =
-    size === "lg" ? "h-[119px] w-[130px]" : "h-[91px] w-[98px]";
+    size === "lg" ? "h-[95px] w-[104px]" : "h-[73px] w-[78px]";
   const external = item.href?.startsWith("http");
   return (
     <a
       href={item.href ?? "#"}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-      className="group card-press relative flex w-full items-center gap-4 rounded-[24px] p-4 hover:bg-white/10"
+      className="group card-press relative flex w-full items-center gap-3 rounded-[20px] p-3 hover:bg-surface-hover"
     >
       <div
-        className={`${thumbSize} shrink-0 overflow-hidden rounded-l-[20px] ${thumbClasses(
+        className={`${thumbSize} shrink-0 overflow-hidden rounded-l-[16px] ${thumbClasses(
           item.variant
         )}`}
       >
@@ -128,10 +128,10 @@ export function ListRow({
         )}
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 transition-transform duration-300 ease-out group-hover:translate-x-1.5">
-        <span className="text-[20px] font-medium tracking-[0.03em] text-cream">
+        <span className="text-[16px] font-medium tracking-[-0.01em] text-cream">
           {item.title}
         </span>
-        <span className="text-[20px] tracking-[0.03em] text-muted-2">
+        <span className="text-[16px] tracking-normal text-muted-2">
           {item.subtitle}
         </span>
       </div>
@@ -141,7 +141,7 @@ export function ListRow({
         src={ARROW_UR}
         alt=""
         aria-hidden
-        className="absolute right-[22px] top-[22px] h-[22px] w-[22px] translate-y-1 opacity-0 transition-[opacity,transform] duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100"
+        className="absolute right-[18px] top-[18px] h-[18px] w-[18px] translate-y-1 opacity-0 transition-[opacity,transform] duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100"
       />
     </a>
   );

@@ -10,10 +10,12 @@
 */
 
 export type ProjectBlock =
-  | { type: "heading"; text: string }
+  // level: 1 (default) = major section, 2 = subsection, 3 = step/sub-subsection.
+  | { type: "heading"; text: string; level?: 1 | 2 | 3 }
   | { type: "text"; body: string }
   | { type: "list"; ordered?: boolean; items: string[] }
-  | { type: "image"; src: string; alt?: string; contain?: boolean };
+  // light: render on a white panel (for transparent PNGs with dark text).
+  | { type: "image"; src: string; alt?: string; contain?: boolean; light?: boolean };
 
 export type MetaRow = { label: string; value: string };
 
@@ -652,7 +654,13 @@ export const PROJECTS: Project[] = [
         body: "The idea was to connect IoT meters, vehicles, and facility sensors into one unified platform that could automatically calculate Scope 1–3 emissions and generate compliant reports. But we weren’t just visualizing data. We were building trust in it.",
       },
 
-      { type: "heading", text: "The Dual Challenge" },
+      {
+        type: "image",
+        src: "/images/ngx/data-wall-new.png",
+        alt: "Reality Overview — business performance and emissions dashboards across scopes",
+      },
+
+      { type: "heading", text: "The Dual Challenge", level: 2 },
       {
         type: "text",
         body: "The challenge was balancing two user perspectives:",
@@ -667,6 +675,12 @@ export const PROJECTS: Project[] = [
       {
         type: "text",
         body: "And we had to do this without ever speaking directly to those users.",
+      },
+
+      {
+        type: "image",
+        src: "/images/ngx/data-wall.png",
+        alt: "The Reality platform — dashboard and systems management views",
       },
 
       { type: "heading", text: "My Role & Constraints" },
@@ -686,7 +700,7 @@ export const PROJECTS: Project[] = [
         type: "text",
         body: "But I wasn’t just drawing screens. I was embedded with the backend and data teams, often writing interface contracts, defining edge cases, and shaping feature scopes.",
       },
-      { type: "heading", text: "The Constraints Were Intense" },
+      { type: "heading", text: "The Constraints Were Intense", level: 2 },
       {
         type: "list",
         items: [
@@ -702,10 +716,17 @@ export const PROJECTS: Project[] = [
         body: "These weren’t just constraints. They were the reality we had to design within.",
       },
 
+      {
+        type: "image",
+        src: "/images/ngx/isometric-map.png",
+        alt: "Flat isometric map grounding emissions in physical space",
+      },
+
       { type: "heading", text: "Process & Methods" },
       {
         type: "heading",
         text: "1. System as User: Research Through Data, Not Interviews",
+        level: 2,
       },
       {
         type: "text",
@@ -738,7 +759,7 @@ export const PROJECTS: Project[] = [
         type: "text",
         body: "This collaboration gave me something better than user quotes. It gave me system empathy. A deep understanding of how data really moves, breaks, and rebuilds inside emission reporting.",
       },
-      { type: "heading", text: "Building and Breaking Prototypes" },
+      { type: "heading", text: "2. Building and Breaking Prototypes", level: 2 },
       {
         type: "text",
         body: "We worked in public: Slack, Figma, Notion. I’d drop a prototype. The backend team would try to break it.",
@@ -747,7 +768,12 @@ export const PROJECTS: Project[] = [
         type: "text",
         body: "This became our rhythm: design, stress-test, redesign.",
       },
-      { type: "heading", text: "Iteration 1: The Data Wall" },
+      {
+        type: "image",
+        src: "/images/ngx/report-tables.png",
+        alt: "Early functional prototypes — raw admin tables for users, systems, and countries",
+      },
+      { type: "heading", text: "Iteration 1: The Data Wall", level: 3 },
       {
         type: "text",
         body: "Our first build was purely functional. Every metric visible, every field exposed, every data point rendered in one endless grid.",
@@ -776,10 +802,10 @@ export const PROJECTS: Project[] = [
       { type: "text", body: "So we scrapped it and started again." },
       {
         type: "image",
-        src: "/images/ngx/data-wall.png",
-        alt: "The Data Wall — every metric exposed at once, accurate but incomprehensible",
+        src: "/images/ngx/fleet-trucks.png",
+        alt: "The fleet — diesel, electric, and third-party vehicle types",
       },
-      { type: "heading", text: "Iteration 2: Trying 3D, Then Taming It" },
+      { type: "heading", text: "Iteration 2: Trying 3D, Then Taming It", level: 3 },
       {
         type: "text",
         body: "We shifted direction. If numbers confused users, maybe space could help them understand the data. That’s where the 3D idea came in.",
@@ -815,12 +841,13 @@ export const PROJECTS: Project[] = [
       },
       {
         type: "image",
-        src: "/images/ngx/isometric-map.png",
-        alt: "Flat isometric map grounding emissions in physical space",
+        src: "/images/ngx/transport-analytics.png",
+        alt: "Transport Operations — the fleet emissions cockpit",
       },
       {
         type: "heading",
         text: "Iteration 3: Serving Two Personas with One Interface",
+        level: 3,
       },
       {
         type: "text",
@@ -854,13 +881,9 @@ export const PROJECTS: Project[] = [
         body: "This became the architecture template for every NGX product that followed.",
       },
       {
-        type: "image",
-        src: "/images/ngx/role-layering.png",
-        alt: "Role-based layering — one unified layout with dynamic modules per role",
-      },
-      {
         type: "heading",
         text: "Iteration 4: Designing for Failure, Not Just Flow",
+        level: 3,
       },
       {
         type: "text",
@@ -906,11 +929,6 @@ export const PROJECTS: Project[] = [
         type: "text",
         body: "This was the version that finally felt alive: real-time, legible, and compliant.",
       },
-      {
-        type: "image",
-        src: "/images/ngx/failure-charts.png",
-        alt: "Adaptive chart density — macro and micro views with recovery states",
-      },
 
       { type: "heading", text: "Solution & Rationale" },
       {
@@ -923,8 +941,15 @@ export const PROJECTS: Project[] = [
       },
 
       {
+        type: "image",
+        src: "/images/ngx/failure-charts.png",
+        alt: "Adaptive chart density — macro and micro views with recovery states",
+      },
+
+      {
         type: "heading",
         text: "1. Transport Operations: Real-Time Fleet Emissions",
+        level: 2,
       },
       {
         type: "text",
@@ -937,11 +962,6 @@ export const PROJECTS: Project[] = [
       {
         type: "text",
         body: "We needed to turn raw telematics data into actionable operational intelligence, something that worked for both logistics managers and sustainability leads.",
-      },
-      {
-        type: "image",
-        src: "/images/ngx/fleet-trucks.png",
-        alt: "The fleet — diesel, electric, and third-party vehicle types",
       },
       { type: "text", body: "Key capabilities I designed:" },
       {
@@ -976,13 +996,18 @@ export const PROJECTS: Project[] = [
         type: "text",
         body: "The most contentious design decision: should we show customer names in the emissions breakdown? We did, because accountability matters. Enterprises needed to see which clients drove their footprint, especially for Scope 3 calculations.",
       },
+
       {
         type: "image",
-        src: "/images/ngx/transport-analytics.png",
-        alt: "Transport Operations — the fleet emissions cockpit",
+        src: "/images/ngx/ghg-dashboard.png",
+        alt: "GHG Dashboard — Scope 1, 2, 3 analytics engine",
       },
 
-      { type: "heading", text: "2. GHG Dashboard: The Core Analytics Engine" },
+      {
+        type: "heading",
+        text: "2. GHG Dashboard: The Core Analytics Engine",
+        level: 2,
+      },
       {
         type: "text",
         body: "What it does — Aggregates all emissions (Scope 1, 2, 3) and turns them into business-readable performance metrics and compliance-ready reports.",
@@ -1021,11 +1046,6 @@ export const PROJECTS: Project[] = [
         body: "Document Traceability: Every data point linked to its original invoice, utility bill, or IoT feed in the Source Document Log. This was non-negotiable for audits. Users could click any number and see the proof.",
       },
       {
-        type: "image",
-        src: "/images/ngx/ghg-dashboard.png",
-        alt: "GHG Dashboard — Scope 1, 2, 3 analytics engine",
-      },
-      {
         type: "text",
         body: "Design thinking — This dashboard had to communicate credibility. Regulators, auditors, and sustainability leads all use it. We designed every graph to have dual context: environmental (tCO₂e) and operational (cost, energy, utilization).",
       },
@@ -1062,6 +1082,7 @@ export const PROJECTS: Project[] = [
       {
         type: "heading",
         text: "3. Hub Operations: Facility-Level Emission Intelligence",
+        level: 2,
       },
       {
         type: "text",
@@ -1122,7 +1143,11 @@ export const PROJECTS: Project[] = [
         body: "Another critical decision: making leaks visible. Early designs buried refrigerant data in a sub-menu. But leaks are often the highest-impact, lowest-cost fix. We promoted them to the primary dashboard and added threshold alerts.",
       },
 
-      { type: "heading", text: "4. Report History: Auditability Made Simple" },
+      {
+        type: "heading",
+        text: "4. Report History: Auditability Made Simple",
+        level: 2,
+      },
       {
         type: "text",
         body: "What it does — Keeps a complete archive of every report generated across modules (Transport, Hub, GHG) for audit, download, and traceability.",
@@ -1155,11 +1180,6 @@ export const PROJECTS: Project[] = [
       {
         type: "text",
         body: "Search & Filter: Quick filters for “All Type” (Transport/Hub/GHG) and date ranges. Pagination for large report archives (hundreds of entries over years).",
-      },
-      {
-        type: "image",
-        src: "/images/ngx/report-tables.png",
-        alt: "Report History — a unified, traceable report archive",
       },
       {
         type: "text",
@@ -1205,7 +1225,7 @@ export const PROJECTS: Project[] = [
         src: "/images/ngx/mobile-screens.png",
         alt: "Reality’s consistent visual logic carried across screens",
       },
-      { type: "heading", text: "Visual Language" },
+      { type: "heading", text: "Visual Language", level: 2 },
       {
         type: "text",
         body: "Isometric 3D with restraint — After 10+ failed renders, we landed on flat isometric geometry with soft glows for active nodes. This gave spatial context without performance cost or visual noise.",
@@ -1240,7 +1260,7 @@ export const PROJECTS: Project[] = [
         type: "text",
         body: "This prevented render collapse while maintaining analytical value.",
       },
-      { type: "heading", text: "Interaction Patterns" },
+      { type: "heading", text: "Interaction Patterns", level: 2 },
       {
         type: "text",
         body: "Progressive disclosure — Summary metrics to category breakdowns to item-level details. Users could drill down without getting lost, and surface without losing context.",
@@ -1257,7 +1277,7 @@ export const PROJECTS: Project[] = [
         type: "text",
         body: "Smart defaults — Every filter, every time range, every view started with the most statistically relevant default. “Last 30 Days” for timelines. “All Scopes” for emissions. “Highest Impact” for sorting.",
       },
-      { type: "heading", text: "Information Architecture" },
+      { type: "heading", text: "Information Architecture", level: 2 },
       {
         type: "text",
         body: "4-step enterprise workflow — Connect to Calibrate to Baseline to Report. This became the mental model for every user journey. Each step had a dedicated interface, but the flow was always visible in the navigation.",
@@ -1337,12 +1357,208 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    slug: "earnipay",
-    img: "work-earnipay",
-    title: "Earnipay",
-    category: "FINTECH",
-    description: "",
-    content: [],
+    slug: "arc",
+    img: "work-arc",
+    title: "Arc",
+    headline: "Arc: One Aggregator for the Entire Crypto Market",
+    category: "BLOCKCHAIN",
+    description:
+      "ARC is a web three solution that makes you manage your entire crypto market from the palm of your hand by connecting the world of DEX, CEX and NFT on multiple blockchains effortlessly.",
+    meta: [
+      { label: "Completion", value: "August 2021" },
+      { label: "Industry", value: "Blockchain" },
+      { label: "Tools", value: "Figma, After Effects, Notion" },
+      { label: "Services", value: "Research, Product & Web Design" },
+    ],
+    content: [
+      {
+        type: "image",
+        src: "/images/arc/overview.png",
+        alt: "Arc — the aggregated crypto market dashboard",
+      },
+
+      { type: "heading", text: "Background" },
+      {
+        type: "text",
+        body: "The crypto world has existed since 2009 but didn't get much limelight until the Defi space's introduction in 2015. The Defi space got a bigger boom in 2017 with the rise of Centralized Exchanges like Binance and Decentralized Exchanges like Uniswap. With the rise of crypto, new tokens get listed daily. Many of these tokens are found more on DEXs, with Pancakeswap, Uniswap, Zapper, etc., a hub to list and interact with connected to your wallet, e.g. Trustwallet. This made people have investments scattered across multiple platforms, making it difficult to manage their investments properly and estimate their worth. Arc was devised to be the solution to unifying the crypto space, including all CEX, DEX and even NFT investments, to make the lives of crypto investors easier.",
+      },
+
+      { type: "heading", text: "My Role" },
+      {
+        type: "text",
+        body: "I came into Arc as the only designer on the project to handle the research, brainstorming with the CEO, who was the major visionary of the project. I took those ideas, improved on them, and created high-fidelity mockups that would be tested and implemented. I was shortly joined by another designer who would work directly under me to coordinate the two initial projects of Arc, including the web3 aggregator and the NFT marketplace.",
+      },
+
+      { type: "heading", text: "The Briefings Began" },
+      {
+        type: "text",
+        body: "When I joined the team, there was an old design file that the previous designer had designed. Hence, my first act was to ask for feedback on the product, and why the dashboard was to be redesigned, so I started with meetings with the CEO as it was his idea to redesign the project. Some calls were scheduled in which his opinions on the current project were shared and how he felt the project didn't fully reflect his vision. But as a professional designer, my goal is to align business goals and users' needs together, so I went on ahead to test the existing product with a few members of the discord community to get the pain points from the users' perspectives as well, and this was used to draft out the new designs.",
+      },
+
+      { type: "heading", text: "More Research" },
+      {
+        type: "text",
+        body: "The next step in the research phase was to look at major protocols across several aspects that were doing well in their niche. The available product has covered many niche areas, including Defi, DEX, NFT, and analysis tools. So these were the competitors researched — DEX: 1inch, Zapper, Uniswap, Sushiswap; NFT: Opensea, Rarible, Foundation.app; Analysis: Dextools, Coinmarketcap. These helped in getting an overview; though analogous, it helped to structure the UX of the product as the base shell so we can improve the design, UX, and overall value proposition of the protocol.",
+      },
+
+      { type: "heading", text: "Creating Personas" },
+      {
+        type: "text",
+        body: "The personas created were aimed at having a mental picture of the type of users we would have to design for, to be able to empathize with the users properly.",
+      },
+      {
+        type: "image",
+        src: "/images/arc/persona-1.png",
+        alt: "Arc user persona",
+        light: true,
+      },
+      {
+        type: "image",
+        src: "/images/arc/persona-2.png",
+        alt: "Arc user persona",
+        light: true,
+      },
+
+      { type: "heading", text: "Brainstorming with HMW (How Might We)" },
+      {
+        type: "text",
+        body: "Taking further steps to refine the problems with how we might help — seeing the solutions from the users' pain points and finding the best ways to offer value and simpler, more flexible flows.",
+      },
+      {
+        type: "image",
+        src: "/images/arc/hmw.png",
+        alt: "How Might We — reframing pain points into opportunities",
+      },
+
+      { type: "heading", text: "Design Decisions" },
+      {
+        type: "text",
+        body: "After carefully analyzing the data and working with an MVP and time constraints, the following solutions were designed.",
+      },
+
+      { type: "heading", text: "Dashboard", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/dashboard.png",
+        alt: "Arc dashboard — a unified view of CEX and DEX holdings",
+      },
+      {
+        type: "text",
+        body: "The dashboard is structured so that you get an overview of your investment holdings. At the same time, you can toggle to view the individual holdings, view your earnings, and interact with your other exchanges. Here you can see your CEX holdings and investments and interact with them, likewise your DEX investments — stake and unstake, bridge, and other forms of trading.",
+      },
+
+      { type: "heading", text: "Bridge", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/bridge.png",
+        alt: "Arc bridge — move the same asset across blockchains",
+      },
+      {
+        type: "text",
+        body: "The bridge Arc gives was designed to keep a record of all the activities and, simultaneously, give you a clean and easy way to move the same asset between different blockchains. We also take it forward by swapping different tokens between chains.",
+      },
+
+      { type: "heading", text: "Swap with Multiple Routes", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/swap.png",
+        alt: "Arc swap — best-route token conversion",
+      },
+      {
+        type: "text",
+        body: "The swap interface was designed to allow the conversion of one token to another on the same blockchain. At the same time, we give users the ability to import tokens from any blockchain by pulling data from sources like DEXTools, Coingecko, Coinmarketcap, etc. You can swap any token in the world for any token on Arc. We give you the best routes, aggregate all protocols with such tokens, and select the best for you.",
+      },
+
+      { type: "heading", text: "Trade", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/trade.png",
+        alt: "Arc trade — spot and futures via aggregated DEX liquidity",
+      },
+      {
+        type: "text",
+        body: "Trading is one feature that has been very difficult on DEXs due to its fast-paced nature and need for high liquidity. With Arc as an aggregator, we connect to the pools of multiple DEXs and access their treasury pools, and this gives more than enough to handle instant trading for both spot and futures trading — bringing the CEX experience into a decentralized space.",
+      },
+
+      { type: "heading", text: "Fiat On-Ramp", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/fiat-onramp.png",
+        alt: "Arc fiat on-ramp — buy crypto with card or bank via Wert",
+      },
+      {
+        type: "text",
+        body: "One of the biggest needs for most users of DEX is how to buy tokens; yes, we can manipulate the tokens from one form to another and invest when we have them, but getting them initially is the issue. So Arc integrates Wert, a tool that allows the purchase of several tokens via payments with your card or bank account, and this allows you to purchase crypto that can be traded or swapped at will.",
+      },
+
+      { type: "heading", text: "Pools & Farms", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/pools-farms.png",
+        alt: "Arc pools & farms — stake tokens for passive income",
+      },
+      {
+        type: "text",
+        body: "Pools and Farms are investment opportunities given to non-trading investors to stake their tokens and earn passive income. By so doing, they contribute to the protocol's treasury, which helps the speed of transactions in general. All pools and farms generate rewards that can be claimed at any time.",
+      },
+
+      { type: "heading", text: "Aggregated NFT Marketplace", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/nft-marketplace.png",
+        alt: "Arc — manage NFTs across marketplaces in one place",
+      },
+      {
+        type: "text",
+        body: "The world of NFTs has become increasingly popular among investors. However, interacting with your NFTs can be a cumbersome task, especially when you have investments in multiple marketplaces. That's where Arc comes in. It simplifies the process by allowing you to connect all your marketplaces in one place. With Arc, you can easily manage your assets, accept bid offers, and even sell your NFTs without having to navigate through multiple marketplaces.",
+      },
+
+      { type: "heading", text: "Lend NFT", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/lend-nft.png",
+        alt: "Arc — borrow and lend NFTs for GameFi",
+      },
+      {
+        type: "text",
+        body: "The usage of non-fungible tokens (NFTs), particularly in the GameFi industry, has become increasingly popular. To excel in some games, it is essential to possess good gear and weapons, which are usually NFTs. While guilds typically provide support to their members, Arc takes it a step further by allowing users to borrow NFTs for a specific period and return them within a given time frame.",
+      },
+
+      { type: "heading", text: "Arbitrage", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/arbitrage.png",
+        alt: "Arc arbitrage — opportunities refreshed every 10 minutes",
+      },
+      {
+        type: "text",
+        body: "Arbitrage trading is a profitable opportunity for many traders. It involves buying assets from the cheapest protocol and selling them at the highest price. Although it sounds simple, it's actually quite challenging to find such opportunities. Our platform is designed to assist you in your arbitrage trading by providing all the necessary tools. You'll have access to important news, Twitter updates (since that's where most protocols announce), and a list of arbitrage opportunities that are refreshed every 10 minutes based on the prices of assets we aggregate from various protocols. Our platform will help you identify the protocols that offer potential arbitrage opportunities.",
+      },
+
+      { type: "heading", text: "Mobile Views", level: 2 },
+      {
+        type: "image",
+        src: "/images/arc/mobile-views.png",
+        alt: "Arc — mobile-first designs for the majority mobile user base",
+      },
+      {
+        type: "text",
+        body: "The majority of Arc's users were mobile users from the research, so high priority had to be placed on the mobile designs to optimize the experience.",
+      },
+
+      { type: "heading", text: "Key Takeaways" },
+      { type: "heading", text: "Learnings", level: 2 },
+      {
+        type: "text",
+        body: "This is by far one of the most interesting web3 projects I have worked on. It allowed me to understand more in-depth the complexities of the Defi and NFT space, prioritize user needs, and simplify their burdensome activities to give maximum value. The web3 space holds a lot of treasures and ways to keep changing lives, and I am glad to have impacted thousands with this one.",
+      },
+
+      { type: "heading", text: "Conclusion" },
+      {
+        type: "text",
+        body: "Arc is a solution set to bring about financial freedom to millions and affect a lot of lives, so the ease of the processes and the clarity of the tasks make it easier to drive adoption and, by so doing, invite more people who can benefit from the amazing product.",
+      },
+    ],
   },
 ];
 
