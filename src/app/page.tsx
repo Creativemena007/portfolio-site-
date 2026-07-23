@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   ListItem,
   ListRow,
@@ -50,7 +51,7 @@ const SIDE_QUEST: ListItem[] = [
     title: "Life away from the screen",
     subtitle:
       "Long runs, heavy lifts, unfamiliar places and the moments between them.",
-    href: "/life-away.html",
+    href: "/life-away",
   },
 ];
 
@@ -68,7 +69,7 @@ const BONUS: ListItem[] = [
     variant: "cover",
     title: "Book Recommendations",
     subtitle: "Books that have shaped me",
-    href: "/bookshelf.html",
+    href: "/bookshelf",
   },
 ];
 
@@ -112,9 +113,12 @@ export default function Home() {
                     tilts toward the socials as if tugging them out. Nudge pauses
                     while hovering so the two motions don't fight. */}
                 <div className="avatar-nudge shrink-0 group-hover:[animation-play-state:paused]">
-                  <img
+                  <Image
                     src="/images/profile.png"
                     alt="Mena"
+                    width={84}
+                    height={84}
+                    priority
                     className="size-[84px] rounded-full object-cover transition-transform duration-500 ease-out group-hover:rotate-[-8deg] group-hover:scale-105"
                   />
                 </div>

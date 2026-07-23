@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -10,6 +11,10 @@ import {
   getProjectBySlug,
   type ProjectBlock,
 } from "@/data/projects";
+import { getDimensionsMap, type ImageDimensions } from "@/lib/image-size";
+
+// Full-width case-study images render at 720px on desktop, viewport-width below.
+const CASE_STUDY_SIZES = "(max-width: 768px) 100vw, 720px";
 
 /* Pre-render all four project pages at build time. */
 export function generateStaticParams() {
@@ -106,7 +111,13 @@ function ArrowRight() {
 
 /* Per-block spacing lives here so headings hug the text beneath them while a
    generous gap opens before each new section. */
-function Block({ block }: { block: ProjectBlock }) {
+function Block({
+  block,
+  dims,
+}: {
+  block: ProjectBlock;
+  dims: Record<string, ImageDimensions>;
+}) {
   switch (block.type) {
     case "heading": {
       // Three tiers build the case-study hierarchy so nested content reads as
@@ -156,21 +167,25 @@ function Block({ block }: { block: ProjectBlock }) {
         </ul>
       );
     }
-    case "image":
+    case "image": {
+      const { width, height } = dims[block.src] ?? { width: 1600, height: 1000 };
       return (
         <Reveal
           className={`my-10 overflow-hidden rounded-[20px] ${
             block.light ? "bg-white p-4 md:p-6" : "bg-surface"
           }`}
         >
-          <img
+          <Image
             src={block.src}
             alt={block.alt ?? ""}
-            loading="lazy"
-            className={`w-full ${block.contain ? "object-contain" : "object-cover"}`}
+            width={width}
+            height={height}
+            sizes={CASE_STUDY_SIZES}
+            className="h-auto w-full"
           />
         </Reveal>
       );
+    }
   }
 }
 
@@ -183,6 +198,14 @@ export default async function ProjectPage({
   const project = getProjectBySlug(slug);
   if (!project) notFound();
   const next = getNextProject(slug);
+
+  // Resolve intrinsic dimensions for every image on the page (hero + body) so
+  // next/image can reserve space and build responsive srcsets.
+  const imageSrcs = [
+    ...(project.hero ? [project.hero] : []),
+    ...project.content.flatMap((b) => (b.type === "image" ? [b.src] : [])),
+  ];
+  const dims = await getDimensionsMap(imageSrcs);
 
   return (
     <main className="relative min-h-screen">
@@ -241,10 +264,14 @@ export default async function ProjectPage({
         {/* Hero */}
         {project.hero && (
           <div className="enter enter-d2 mt-[52px] overflow-hidden rounded-[22px]">
-            <img
+            <Image
               src={project.hero}
               alt={`${project.title} — hero`}
-              className="w-full object-cover"
+              width={dims[project.hero]?.width ?? 1600}
+              height={dims[project.hero]?.height ?? 1000}
+              sizes={CASE_STUDY_SIZES}
+              priority
+              className="h-auto w-full"
             />
           </div>
         )}
@@ -268,7 +295,7 @@ export default async function ProjectPage({
         {project.content.length > 0 && (
           <div className="mt-20">
             {project.content.map((block, i) => (
-              <Block key={i} block={block} />
+              <Block key={i} block={block} dims={dims} />
             ))}
           </div>
         )}
