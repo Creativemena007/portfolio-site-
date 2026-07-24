@@ -11,6 +11,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/data/projects";
+import { AdaptiveImage } from "@/components/adaptive-image";
 
 const ARROW_UR = "/images/icon-arrow-ur1.svg";
 // icon-arrow-diag is an up-arrow; rotated 90° it reads as a right arrow (→).
@@ -45,18 +46,26 @@ function thumbClasses(variant: ThumbVariant) {
 // grid and the detail pages fed from the same data.
 export type Work = Project;
 
-export function WorkCard({ work }: { work: Work }) {
+export function WorkCard({
+  work,
+  blurDataURL,
+}: {
+  work: Work;
+  blurDataURL?: string;
+}) {
   return (
     <Link
       href={`/work/${work.slug}`}
       className="group card-press block rounded-[22px] hover:bg-surface-hover md:p-3"
     >
       <div className="relative aspect-[543/475] w-full overflow-hidden rounded-t-[20px]">
-        <Image
+        <AdaptiveImage
           src={`/images/${work.img}.png`}
           alt={work.title}
           fill
           sizes="(max-width: 768px) 100vw, 543px"
+          placeholder={blurDataURL ? "blur" : undefined}
+          blurDataURL={blurDataURL}
           className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.04]"
         />
       </div>

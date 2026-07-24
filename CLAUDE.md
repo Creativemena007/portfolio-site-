@@ -82,6 +82,30 @@ public/
 
 ## Changelog — what we've done
 
+### 2026-07-24
+- **Bandwidth-gated image rendition (landing page).** Added
+  `src/components/adaptive-image.tsx` — a client wrapper over `next/image` that
+  lowers requested `quality` (75 → 40) when the visitor is on a slow connection
+  or has Data Saver on, read from the Network Information API
+  (`navigator.connection` — Chromium-only; Safari/Firefox/SSR default to full
+  quality, only ever downgrading on positive evidence). Wired into `WorkCard`
+  (the heavy "My Work" grid). Hydration-safe: SSR + first client render use
+  "full", the tier re-evaluates in an effect after mount (below-fold cards are
+  lazy, so only one fetch happens, at the settled tier).
+  - **Gotcha:** Next 16 only optimizes `quality` values on the
+    `images.qualities` allowlist (default `[75]`) — any other value 400s
+    ("q parameter not allowed"). Added `images.qualities: [40, 75]` in
+    `next.config.ts`. If you add more tiers, allowlist them there too.
+  - Verified: work-jito q=75 → 12KB vs q=40 → 8.5KB (~30% lighter).
+- **Incident: local deps downgraded to Next 9.3.3.** On Jul 23 ~11:13 something
+  (likely a Cursor extension/agent install) rewrote `package.json` to
+  `next@^9.3.3` + regenerated the lockfile + `npm install`ed it, breaking local
+  builds (Next 9 can't run React 19 / App Router). Production was unaffected
+  (Vercel builds from git, which kept `next@16.2.10`). Fixed by
+  `git checkout HEAD -- package.json package-lock.json && npm install` (broken
+  copies backed up in the session scratchpad). If local builds suddenly fail on
+  config/`next.config.ts`, check `node_modules/next/package.json` version first.
+
 ### 2026-07-23
 - **Social share image not rendering (Twitter/X, LinkedIn, iMessage, etc.).** The OG
   markup was correct (dynamic `opengraph-image.tsx` "M" monogram, proper

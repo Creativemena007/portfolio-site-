@@ -11,7 +11,7 @@ import {
   getProjectBySlug,
   type ProjectBlock,
 } from "@/data/projects";
-import { getDimensionsMap, type ImageDimensions } from "@/lib/image-size";
+import { getImageMetaMap, type ImageMeta } from "@/lib/image-size";
 
 // Full-width case-study images render at 720px on desktop, viewport-width below.
 const CASE_STUDY_SIZES = "(max-width: 768px) 100vw, 720px";
@@ -113,10 +113,10 @@ function ArrowRight() {
    generous gap opens before each new section. */
 function Block({
   block,
-  dims,
+  meta,
 }: {
   block: ProjectBlock;
-  dims: Record<string, ImageDimensions>;
+  meta: Record<string, ImageMeta>;
 }) {
   switch (block.type) {
     case "heading": {
@@ -168,7 +168,7 @@ function Block({
       );
     }
     case "image": {
-      const { width, height } = dims[block.src] ?? { width: 1600, height: 1000 };
+      const m = meta[block.src];
       return (
         <Reveal
           className={`my-10 overflow-hidden rounded-[20px] ${
@@ -178,9 +178,11 @@ function Block({
           <Image
             src={block.src}
             alt={block.alt ?? ""}
-            width={width}
-            height={height}
+            width={m?.width ?? 1600}
+            height={m?.height ?? 1000}
             sizes={CASE_STUDY_SIZES}
+            placeholder={m?.blurDataURL ? "blur" : undefined}
+            blurDataURL={m?.blurDataURL}
             className="h-auto w-full"
           />
         </Reveal>
@@ -205,7 +207,7 @@ export default async function ProjectPage({
     ...(project.hero ? [project.hero] : []),
     ...project.content.flatMap((b) => (b.type === "image" ? [b.src] : [])),
   ];
-  const dims = await getDimensionsMap(imageSrcs);
+  const meta = await getImageMetaMap(imageSrcs);
 
   return (
     <main className="relative min-h-screen">
@@ -267,9 +269,11 @@ export default async function ProjectPage({
             <Image
               src={project.hero}
               alt={`${project.title} — hero`}
-              width={dims[project.hero]?.width ?? 1600}
-              height={dims[project.hero]?.height ?? 1000}
+              width={meta[project.hero]?.width ?? 1600}
+              height={meta[project.hero]?.height ?? 1000}
               sizes={CASE_STUDY_SIZES}
+              placeholder={meta[project.hero]?.blurDataURL ? "blur" : undefined}
+              blurDataURL={meta[project.hero]?.blurDataURL}
               priority
               className="h-auto w-full"
             />
@@ -295,7 +299,7 @@ export default async function ProjectPage({
         {project.content.length > 0 && (
           <div className="mt-20">
             {project.content.map((block, i) => (
-              <Block key={i} block={block} dims={dims} />
+              <Block key={i} block={block} meta={meta} />
             ))}
           </div>
         )}

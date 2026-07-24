@@ -7,6 +7,7 @@ import {
 } from "@/components/portfolio";
 import { Reveal } from "@/components/reveal";
 import { PROJECTS } from "@/data/projects";
+import { getImageMetaMap } from "@/lib/image-size";
 
 /* ------------------------------- Content ------------------------------- */
 
@@ -94,7 +95,14 @@ const SOCIALS = [
 
 /* -------------------------------- Page --------------------------------- */
 
-export default function Home() {
+export default async function Home() {
+  // Tiny blurred previews for the work-grid thumbnails, generated at build, so
+  // each card shows something instantly instead of a blank box while the real
+  // image downloads.
+  const workBlur = await getImageMetaMap(
+    PROJECTS.map((p) => `/images/${p.img}.png`)
+  );
+
   return (
     <main className="relative min-h-screen overflow-hidden">
       <div className="relative z-10 mx-auto w-full max-w-[888px] px-5 py-16 md:px-6 md:py-28 lg:py-[132px]">
@@ -238,7 +246,11 @@ export default function Home() {
               <SectionLabel>My Work</SectionLabel>
               <Reveal stagger className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 {PROJECTS.map((w) => (
-                  <WorkCard key={w.slug} work={w} />
+                  <WorkCard
+                    key={w.slug}
+                    work={w}
+                    blurDataURL={workBlur[`/images/${w.img}.png`]?.blurDataURL}
+                  />
                 ))}
               </Reveal>
             </section>
