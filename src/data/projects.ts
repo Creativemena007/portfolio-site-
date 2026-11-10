@@ -15,7 +15,12 @@ export type ProjectBlock =
   | { type: "text"; body: string }
   | { type: "list"; ordered?: boolean; items: string[] }
   // light: render on a white panel (for transparent PNGs with dark text).
-  | { type: "image"; src: string; alt?: string; light?: boolean };
+  | { type: "image"; src: string; alt?: string; light?: boolean }
+  // A line worth pulling out of the running text. Use sparingly: one or two
+  // per case study, and only words that already carry the argument.
+  | { type: "quote"; text: string }
+  // Headline numbers. `value` is the figure ("70%"), `label` what it measures.
+  | { type: "stats"; items: { value: string; label: string }[] };
 
 export type MetaRow = { label: string; value: string };
 
@@ -51,7 +56,7 @@ export const PROJECTS: Project[] = [
     // Jito green — the thumbnail's hands would otherwise read as salmon.
     tint: "95 211 160",
     description:
-      "Jito Foundation (Network) is an MEV infrastructure company that develops systems to scale Solana and maximize validator rewards. Users can deposit SOL to earn JitoSOL. The Jito Stake Pool delegates SOL to MEV-enabled validators who auction blockspace and earn MEV rewards. These rewards boost the stake pool’s APY, and users holding JitoSOL also benefit from MEV rewards, enhancing their overall returns alongside staking rewards. This setup allows users to maximize their earnings through staking and MEV opportunities on the Solana network.",
+      "Research, product and web design for Jito’s Solana staking platform: a simple mode for people new to staking, an advanced mode for experienced stakers, and the marketing site that introduced both.",
     visitUrl: "https://www.jito.network",
     hero: "/images/jito/hero.png",
     meta: [
@@ -64,7 +69,7 @@ export const PROJECTS: Project[] = [
       { type: "heading", text: "Client Background" },
       {
         type: "text",
-        body: "Revolutionizing financial empowerment through cutting-edge technology, our fintech company seamlessly connects individuals with personalized solutions, enabling them to achieve their financial goals with confidence.",
+        body: "Jito Foundation (Network) is an MEV infrastructure company that develops systems to scale Solana and maximize validator rewards. Users can deposit SOL to earn JitoSOL. The Jito Stake Pool delegates SOL to MEV-enabled validators who auction blockspace and earn MEV rewards. These rewards boost the stake pool’s APY, and users holding JitoSOL also benefit from MEV rewards, enhancing their overall returns alongside staking rewards. This setup allows users to maximize their earnings through staking and MEV opportunities on the Solana network.",
       },
       {
         type: "image",
@@ -75,7 +80,7 @@ export const PROJECTS: Project[] = [
       { type: "heading", text: "Designing the Jito Staking Platform" },
       {
         type: "text",
-        body: "After checking out the product documentation on specifications and expectations, I had a friendly discovery call with the team. During the call, I discovered that the goal of the project was to build a platform that is similar to Marinande Finance. This means that the Jito platform will only be different from its competitors by offering a better Annual Percentage Yield (APY), which is a great unique selling point (USP). However, it was important to me to learn more about what they want to offer to their potential users, so I asked some questions to get a better understanding.",
+        body: "After checking out the product documentation on specifications and expectations, I had a friendly discovery call with the team. During the call, I discovered that the goal of the project was to build a platform that is similar to Marinade Finance. This means that the Jito platform will only be different from its competitors by offering a better Annual Percentage Yield (APY), which is a great unique selling point (USP). However, it was important to me to learn more about what they want to offer to their potential users, so I asked some questions to get a better understanding.",
       },
       {
         type: "image",
@@ -86,7 +91,7 @@ export const PROJECTS: Project[] = [
       { type: "heading", text: "Research & Discovery" },
       {
         type: "text",
-        body: "So, I started out by checking out some other platforms that offer staking services to their users besides Marinande Finance. Platforms like Socean, Lido, and JPool all seem to focus on either Degens (people involved in crypto and financial spaces) or Noobs (newbies), and that seems to be working well for them. Now, Jito, like Marinande, wants to make their user experience simpler for novices. But, why can’t we do both? Let’s make it happen!",
+        body: "So, I started out by checking out some other platforms that offer staking services to their users besides Marinade Finance. Platforms like Socean, Lido, and JPool all seem to focus on either Degens (people involved in crypto and financial spaces) or Noobs (newbies), and that seems to be working well for them. Now, Jito, like Marinade, wants to make their user experience simpler for novices. But, why can’t we do both? Let’s make it happen!",
       },
       {
         type: "image",
@@ -97,7 +102,7 @@ export const PROJECTS: Project[] = [
       { type: "heading", text: "Interviews" },
       {
         type: "text",
-        body: "To validate my initial assumptions gotten from my research i decided to conduct an interview on people who stake SOL or people who stake generally. The goals of the interview were quite straight forward",
+        body: "To validate my initial assumptions gotten from my research I decided to conduct an interview on people who stake SOL or people who stake generally. The goals of the interview were quite straight forward",
       },
       {
         type: "list",
@@ -164,7 +169,7 @@ export const PROJECTS: Project[] = [
       },
       {
         type: "text",
-        body: "During the design process for the Jito Staking Platform, the client expressed a strong desire to use the color green in their design. This was partly because green is part of Solana’s color scheme, but also because they were interested in learning from what other successful platforms like Marinande were doing. After exploring different design options for three days, we were able to create Version 1, which incorporated the client’s desired use of green as well as other design elements that we felt would best meet the needs of the platform’s users.",
+        body: "During the design process for the Jito Staking Platform, the client expressed a strong desire to use the color green in their design. This was partly because green is part of Solana’s color scheme, but also because they were interested in learning from what other successful platforms like Marinade were doing. After exploring different design options for three days, we were able to create Version 1, which incorporated the client’s desired use of green as well as other design elements that we felt would best meet the needs of the platform’s users.",
       },
       { type: "text", body: "Version one by components…" },
       {
@@ -237,7 +242,7 @@ export const PROJECTS: Project[] = [
         src: "/images/jito/advanced-dashboard.jpeg",
         alt: "Advanced staking dashboard with strategy analytics",
       },
-      { type: "text", body: "..Some components created in the style guide" },
+      { type: "text", body: "Some components created in the style guide" },
       {
         type: "image",
         src: "/images/jito/style-guide.png",
@@ -429,7 +434,11 @@ export const PROJECTS: Project[] = [
       },
       {
         type: "text",
-        body: "Still, it wasn’t wasted. That failure taught us something foundational: “Users don’t want complexity. They want context — delivered in familiar, conversational ways.”",
+        body: "Still, it wasn’t wasted. That failure taught us something foundational:",
+      },
+      {
+        type: "quote",
+        text: "Users don’t want complexity. They want context — delivered in familiar, conversational ways.",
       },
       {
         type: "text",
@@ -464,7 +473,15 @@ export const PROJECTS: Project[] = [
       },
       {
         type: "text",
-        body: "That clarity arrived with a single question: “What if AI lived inside conversations instead of outside them?” It was the question that transformed Zo’s purpose and opened the door to its next evolution.",
+        body: "That clarity arrived with a single question:",
+      },
+      {
+        type: "quote",
+        text: "What if AI lived inside conversations instead of outside them?",
+      },
+      {
+        type: "text",
+        body: "It was the question that transformed Zo’s purpose and opened the door to its next evolution.",
       },
 
       { type: "heading", text: "Phase 3: The AI Pivot" },
@@ -550,10 +567,18 @@ export const PROJECTS: Project[] = [
       { type: "heading", text: "Metrics & Impact" },
       { type: "text", body: "The AI pivot unlocked traction quickly:" },
       {
+        type: "stats",
+        items: [
+          { value: "100k+", label: "downloads on Google Play within months" },
+          {
+            value: "4.0★",
+            label: "rating, with reviews praising clean design and intuitive AI flow",
+          },
+        ],
+      },
+      {
         type: "list",
         items: [
-          "100k+ downloads on Google Play within months.",
-          "4.0★ rating, with reviews praising clean design and intuitive AI flow.",
           "Adoption by Web3 communities, repurposing Zo as a coordination hub.",
           "A modular design system that scaled across multiple product experiments.",
           "A new category identity: not just AI chat, but AI creation inside chat.",
@@ -652,8 +677,8 @@ export const PROJECTS: Project[] = [
         body: "But emissions data is messy. IoT devices speak a hundred dialects. Operational staff don’t think in carbon. Admins need auditability. And reporting frameworks? They change like the wind.",
       },
       {
-        type: "text",
-        body: "We weren’t just designing a dashboard. We were designing a language for climate truth, one both machines and humans could trust.",
+        type: "quote",
+        text: "We weren’t just designing a dashboard. We were designing a language for climate truth, one both machines and humans could trust.",
       },
       {
         type: "text",
@@ -798,8 +823,8 @@ export const PROJECTS: Project[] = [
       },
       { type: "text", body: "That failure gave me my first real insight:" },
       {
-        type: "text",
-        body: "“Clarity isn’t hiding data. It’s sequencing attention.”",
+        type: "quote",
+        text: "Clarity isn’t hiding data. It’s sequencing attention.",
       },
       {
         type: "text",
@@ -1299,6 +1324,16 @@ export const PROJECTS: Project[] = [
 
       { type: "heading", text: "Metrics & Impact" },
       {
+        type: "stats",
+        items: [
+          { value: "70%", label: "reduction in supplier onboarding time" },
+          {
+            value: "Zero",
+            label: "critical data mismatches in third-party audits",
+          },
+        ],
+      },
+      {
         type: "list",
         items: [
           "First IoT-driven emissions platform in MENA. No other product in the region was doing real-time, sensor-connected carbon accounting at this scale.",
@@ -1570,6 +1605,12 @@ export const PROJECTS: Project[] = [
 
 export function getProjectBySlug(slug: string): Project | undefined {
   return PROJECTS.find((p) => p.slug === slug);
+}
+
+/** The previous project in the list, wrapping around to the last. */
+export function getPreviousProject(slug: string): Project {
+  const i = PROJECTS.findIndex((p) => p.slug === slug);
+  return PROJECTS[(i - 1 + PROJECTS.length) % PROJECTS.length];
 }
 
 /** The next project in the list, wrapping around to the first. */

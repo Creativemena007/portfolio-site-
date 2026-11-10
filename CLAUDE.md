@@ -46,6 +46,7 @@ src/
     portfolio.tsx       WorkCard, ListItem, ListRow, SectionLabel (home page pieces)
     reveal.tsx          Scroll-reveal wrapper (.reveal / .reveal-stagger in CSS)
     escape-home.tsx     Esc-to-home key handler on project pages
+    reading.tsx         Long-form helpers: scroll reveal + current-section label
     site-footer.tsx     Shared footer (home + case studies)
     dev-toolbar.tsx     Dev-only Agentation loader (dynamic import)
     adaptive-image.tsx  next/image wrapper, lower quality on slow connections
@@ -90,6 +91,29 @@ public/
 ## Changelog — what we've done
 
 ### 2026-11-10
+- **Case-study pages redesigned** (`src/app/work/[slug]/page.tsx`, styles under
+  `.cs` in `globals.css`).
+  - One left edge on an 880px column; text stops at 680px, figures and section
+    rules run the full 880px, the hero steps out to 1080px. Large headline,
+    category eyebrow, summary as a lede, facts in a row under the hero.
+  - The flat block list is grouped into **numbered sections** at each level-1
+    heading (ids from the heading text), so the sticky bar shows the section
+    being read plus a reading-progress line.
+  - Image alt text is shown as a visible caption.
+  - New block types in `projects.ts`: `quote` (pull quote) and `stats`
+    (headline numbers). Used only with words/numbers already in the copy:
+    Zo (2 quotes, 100k+ / 4.0★), NGX (2 quotes, 70% / Zero).
+  - Previous / next project links at the end (`getPreviousProject`).
+  - Shared long-form helpers moved to `src/components/reading.tsx`
+    (`RevealAll`, `CurrentSection`), used by case studies and the publication;
+    `.read-progress` / `.read-current` styles now live in `globals.css`.
+  - **Jito copy:** "Marinande" → "Marinade" (4×); the generic filler paragraph
+    under "Client Background" was replaced with the factual company
+    description that used to be the page summary, and the summary now says
+    what the work was. *The new Jito summary is a draft written from the case
+    study's own content — the owner should review it.*
+  - *Still open:* Zo has no hero image set; Jito and Arc open with no stated
+    outcome; Arc's summary reads as marketing copy.
 - **Socials peek on load.** `profile-socials.tsx` slides the social links out
   once ~0.9s after load, holds ~1.7s, then tucks them back (`peek` state, kept
   separate from `open` so `aria-expanded` is unaffected). Skipped under

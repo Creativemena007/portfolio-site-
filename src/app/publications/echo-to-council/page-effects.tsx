@@ -1,65 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 /*
-  Two small page-level behaviours for the publication. Both attach to markup
-  that is rendered on the server (content.tsx), so they find it in the DOM
-  rather than wrapping it.
+  Page-level behaviour specific to this publication. (The scroll reveal and
+  the current-section label are shared: see src/components/reading.tsx.)
 */
-
-/*
-  The label on the right of the sticky bar: "Publication" at the top, then the
-  section you are reading ("03 · What changed in AI since 2024"). It tracks
-  whichever section crosses the middle of the viewport.
-*/
-export function CurrentSection({ scope }: { scope: string }) {
-  const [label, setLabel] = useState("Publication");
-
-  useEffect(() => {
-    const sections = Array.from(
-      document.querySelectorAll<HTMLElement>(`${scope} section[id]`)
-    );
-    const name = (s: HTMLElement) => {
-      const eyebrow = s.querySelector(".eyebrow")?.textContent ?? "";
-      const title = s.querySelector("h2")?.textContent;
-      // Eyebrows read "03 · The world moved": keep the number, use the title.
-      const number = eyebrow.split("·")[0].trim();
-      return title ? `${number} · ${title}` : eyebrow;
-    };
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setLabel(name(entry.target as HTMLElement));
-        }
-      },
-      // A thin band across the middle of the viewport.
-      { rootMargin: "-45% 0px -50% 0px" }
-    );
-    sections.forEach((s) => io.observe(s));
-
-    // Back above the first section → the generic label again.
-    const onScroll = () => {
-      const first = sections[0];
-      if (first && first.getBoundingClientRect().top > window.innerHeight / 2) {
-        setLabel("Publication");
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      io.disconnect();
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [scope]);
-
-  // Keyed span: the label re-mounts on change so its CSS entrance replays.
-  return (
-    <a href="#top" className="pub-current transition-colors hover:text-cream">
-      <span key={label}>{label}</span>
-    </a>
-  );
-}
 
 /*
   Depth on the opening spread: the three phones drift a few pixels with the

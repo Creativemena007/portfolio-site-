@@ -3,19 +3,35 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { Reveal } from "@/components/reveal";
 import { EscapeHome } from "@/components/escape-home";
+import { CurrentSection, RevealAll } from "@/components/reading";
 import { SiteFooter } from "@/components/site-footer";
 import {
   PROJECTS,
   getNextProject,
+  getPreviousProject,
   getProjectBySlug,
   type ProjectBlock,
 } from "@/data/projects";
 import { getImageMetaMap, type ImageMeta } from "@/lib/image-size";
 
-// Full-width case-study images render at 720px on desktop, viewport-width below.
-const CASE_STUDY_SIZES = "(max-width: 768px) 100vw, 720px";
+/*
+  Case-study page.
+
+  Layout (styles live under `.cs` in globals.css):
+  - Header: category, a large headline, the one-paragraph summary, visit link.
+  - Hero steps out wide; the at-a-glance facts sit directly under it.
+  - The body is grouped into numbered sections, one per top-level heading in
+    the data, each with its own id. That gives the sticky bar a "you are here"
+    label and the page a steady rhythm instead of one unbroken column.
+  - Text keeps a 680px measure; images step out to 880px with their alt text
+    shown as a caption.
+  - Ends with previous / next project, so reading can continue either way.
+*/
+
+// Body images render up to 880px wide on desktop, viewport-width below.
+const FIGURE_SIZES = "(max-width: 920px) 100vw, 880px";
+const HERO_SIZES = "(max-width: 1120px) 100vw, 1080px";
 
 /* Pre-render all four project pages at build time. */
 export function generateStaticParams() {
@@ -110,8 +126,44 @@ function ArrowRight() {
   );
 }
 
-/* Per-block spacing lives here so headings hug the text beneath them while a
-   generous gap opens before each new section. */
+/* --------------------------- Sections ---------------------------------- */
+
+type Section = {
+  /** Anchor id; undefined for blocks that come before the first heading. */
+  id?: string;
+  title?: string;
+  blocks: ProjectBlock[];
+};
+
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+/* Split the flat block list into sections at each top-level heading. */
+function toSections(content: ProjectBlock[]): Section[] {
+  const sections: Section[] = [];
+  const seen = new Map<string, number>();
+  for (const block of content) {
+    if (block.type === "heading" && (block.level ?? 1) === 1) {
+      const base = slugify(block.text) || "section";
+      const n = seen.get(base) ?? 0;
+      seen.set(base, n + 1);
+      sections.push({
+        id: n ? `${base}-${n + 1}` : base,
+        title: block.text,
+        blocks: [],
+      });
+    } else {
+      if (sections.length === 0) sections.push({ blocks: [] });
+      sections[sections.length - 1].blocks.push(block);
+    }
+  }
+  return sections;
+}
+
 function Block({
   block,
   meta,
@@ -120,73 +172,52 @@ function Block({
   meta: Record<string, ImageMeta>;
 }) {
   switch (block.type) {
-    case "heading": {
-      // Three tiers build the case-study hierarchy so nested content reads as
-      // nested: L1 = major section (large, bold, generous space above),
-      // L2 = subsection (medium, semibold), L3 = step (small uppercase eyebrow).
-      const level = block.level ?? 1;
-      if (level === 2) {
-        return (
-          <h3 className="mt-14 mb-4 text-[18px] font-semibold leading-[1.3] tracking-[-0.005em] text-cream md:text-[20px]">
-            {block.text}
-          </h3>
-        );
-      }
-      if (level === 3) {
-        return (
-          <h4 className="mt-10 mb-3 text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.12em] text-cream-dim">
-            {block.text}
-          </h4>
-        );
-      }
-      return (
-        <h2 className="mt-[90px] mb-5 text-[22px] font-bold leading-[1.15] tracking-[-0.01em] text-cream first:mt-0 md:text-[26px]">
-          {block.text}
-        </h2>
-      );
-    }
-    case "text":
-      return (
-        <p className="mb-5 text-[15px] leading-[1.7] tracking-normal text-muted md:text-[16px]">
-          {block.body}
-        </p>
-      );
-    case "list": {
-      const cls =
-        "mb-5 flex flex-col gap-3 pl-5 text-[15px] leading-[1.7] tracking-normal text-muted marker:text-label md:text-[16px]";
-      return block.ordered ? (
-        <ol className={`list-decimal ${cls}`}>
-          {block.items.map((item, i) => (
-            <li key={i}>{item}</li>
-          ))}
-        </ol>
+    case "heading":
+      // Level 1 is the section title (rendered by the section). Level 2 is a
+      // sub-heading; level 3 a small uppercase step label.
+      return block.level === 3 ? (
+        <h4 className="cs-step">{block.text}</h4>
       ) : (
-        <ul className={`list-disc ${cls}`}>
-          {block.items.map((item, i) => (
-            <li key={i}>{item}</li>
-          ))}
-        </ul>
+        <h3 className="cs-sub">{block.text}</h3>
       );
+    case "text":
+      return <p>{block.body}</p>;
+    case "list": {
+      const items = block.items.map((item, i) => <li key={i}>{item}</li>);
+      return block.ordered ? <ol>{items}</ol> : <ul>{items}</ul>;
     }
+    case "quote":
+      return <blockquote className="cs-quote reveal">{block.text}</blockquote>;
+    case "stats":
+      return (
+        <dl className="cs-stats reveal">
+          {block.items.map((item) => (
+            <div key={item.label}>
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+      );
     case "image": {
       const m = meta[block.src];
       return (
-        <Reveal
-          className={`my-10 overflow-hidden rounded-[20px] ${
-            block.light ? "bg-white p-4 md:p-6" : "bg-surface"
-          }`}
-        >
-          <Image
-            src={block.src}
-            alt={block.alt ?? ""}
-            width={m?.width ?? 1600}
-            height={m?.height ?? 1000}
-            sizes={CASE_STUDY_SIZES}
-            placeholder={m?.blurDataURL ? "blur" : undefined}
-            blurDataURL={m?.blurDataURL}
-            className="h-auto w-full"
-          />
-        </Reveal>
+        <figure className={`cs-fig reveal ${block.light ? "is-light" : ""}`}>
+          <div className="cs-fig-frame">
+            <Image
+              src={block.src}
+              alt={block.alt ?? ""}
+              width={m?.width ?? 1600}
+              height={m?.height ?? 1000}
+              sizes={FIGURE_SIZES}
+              placeholder={m?.blurDataURL ? "blur" : undefined}
+              blurDataURL={m?.blurDataURL}
+            />
+          </div>
+          {/* The alt text doubles as a visible caption; hidden from screen
+              readers here because the image already announces it. */}
+          {block.alt && <figcaption aria-hidden>{block.alt}</figcaption>}
+        </figure>
       );
     }
   }
@@ -201,6 +232,7 @@ export default async function ProjectPage({
   const project = getProjectBySlug(slug);
   if (!project) notFound();
   const next = getNextProject(slug);
+  const previous = getPreviousProject(slug);
 
   // Resolve intrinsic dimensions for every image on the page (hero + body) so
   // next/image can reserve space and build responsive srcsets.
@@ -210,48 +242,62 @@ export default async function ProjectPage({
   ];
   const meta = await getImageMetaMap(imageSrcs);
 
+  // Number the titled sections 01, 02, … (blocks before the first heading
+  // form an untitled intro and take no number).
+  let count = 0;
+  const sections = toSections(project.content).map((section) => ({
+    ...section,
+    number: section.title ? String(++count).padStart(2, "0") : undefined,
+  }));
+
   return (
     <main className="relative min-h-screen">
       <EscapeHome />
+      <RevealAll scope=".cs" />
 
-      {/* Top nav — pinned so "Go back home" / "Next project" stay reachable
-          while scrolling the case study. Esc also returns home. */}
+      {/* Top bar — pinned so navigation stays reachable while scrolling. The
+          middle shows the section being read; Esc also returns home. */}
       <div className="sticky top-0 z-20 border-b border-white/5 bg-bg/70 backdrop-blur-md">
-        <nav className="mx-auto flex w-full max-w-[720px] items-center justify-between px-5 py-4 text-[12px] font-medium uppercase tracking-[0.18em] text-label md:px-6">
+        <nav className="mx-auto flex w-full max-w-[880px] items-center justify-between gap-6 px-5 py-4 text-[12px] font-medium uppercase tracking-[0.18em] text-label md:px-6">
           <Link
             href="/"
-            className="flex items-center gap-2.5 transition-colors hover:text-cream"
+            className="flex shrink-0 items-center gap-2.5 transition-colors hover:text-cream"
           >
             <ArrowBack />
             Home
           </Link>
+          <CurrentSection
+            scope=".cs"
+            idle={project.title}
+            className="hidden flex-1 text-center sm:block"
+          />
           <Link
             href={`/work/${next.slug}`}
-            className="flex items-center gap-2.5 transition-colors hover:text-cream"
+            className="flex shrink-0 items-center gap-2.5 transition-colors hover:text-cream"
           >
             Next project
             <ArrowRight />
           </Link>
         </nav>
+        <div className="read-progress" aria-hidden />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-[720px] px-5 pb-[52px] pt-[52px] md:px-6 md:pb-[58px] md:pt-16">
-        {/* Header */}
-        <header className="enter enter-d1 flex flex-col gap-5">
-          <h1 className="text-[26px] font-bold leading-[1.1] tracking-[-0.015em] text-cream md:text-[32px]">
-            {project.headline ?? project.title}
-          </h1>
+      <article
+        id="top"
+        className="cs relative z-10 px-5 pt-[52px] md:px-6 md:pt-16"
+      >
+        <header className="cs-head enter enter-d1">
+          <p className="eyebrow">{project.category} · Case study</p>
+          <h1>{project.headline ?? project.title}</h1>
           {project.description && (
-            <p className="text-[15px] leading-[1.6] tracking-normal text-muted md:text-[16px]">
-              {project.description}
-            </p>
+            <p className="cs-lede">{project.description}</p>
           )}
           {project.visitUrl && (
             <a
               href={project.visitUrl}
               target="_blank"
               rel="noreferrer"
-              className="group mt-2 flex w-fit items-center gap-1.5 text-[16px] tracking-normal text-cream"
+              className="cs-visit group"
             >
               Visit link
               <img
@@ -264,48 +310,74 @@ export default async function ProjectPage({
           )}
         </header>
 
-        {/* Hero */}
         {project.hero && (
-          <div className="enter enter-d2 mt-[52px] overflow-hidden rounded-[22px]">
+          <div className="cs-hero enter enter-d2">
             <Image
               src={project.hero}
               alt={`${project.title} — hero`}
               width={meta[project.hero]?.width ?? 1600}
               height={meta[project.hero]?.height ?? 1000}
-              sizes={CASE_STUDY_SIZES}
+              sizes={HERO_SIZES}
               placeholder={meta[project.hero]?.blurDataURL ? "blur" : undefined}
               blurDataURL={meta[project.hero]?.blurDataURL}
               priority
-              className="h-auto w-full"
             />
           </div>
         )}
 
-        {/* Meta table */}
         {project.meta && project.meta.length > 0 && (
-          <dl className="mt-[52px]">
+          <dl className="cs-meta enter enter-d3">
             {project.meta.map((row) => (
-              <div
-                key={row.label}
-                className="flex items-center justify-between gap-4 border-b border-white/10 py-3.5 text-[15px] tracking-normal md:text-[16px]"
-              >
-                <dt className="text-muted">{row.label}</dt>
-                <dd className="text-right text-cream-dim">{row.value}</dd>
+              <div key={row.label}>
+                <dt>{row.label}</dt>
+                <dd>{row.value}</dd>
               </div>
             ))}
           </dl>
         )}
 
-        {/* Body */}
-        {project.content.length > 0 && (
-          <div className="mt-20">
-            {project.content.map((block, i) => (
-              <Block key={i} block={block} meta={meta} />
-            ))}
-          </div>
-        )}
+        {sections.map((section, i) => {
+          const blocks = section.blocks.map((block, j) => (
+            <Block key={j} block={block} meta={meta} />
+          ));
+          // Blocks before the first heading have no title of their own.
+          if (!section.title) {
+            return (
+              <div key={i} className="cs-intro">
+                {blocks}
+              </div>
+            );
+          }
+          return (
+            <section key={section.id} id={section.id}>
+              <div className="cs-sechead">
+                <span className="eyebrow">{section.number}</span>
+                <h2>{section.title}</h2>
+              </div>
+              {blocks}
+            </section>
+          );
+        })}
 
-        <SiteFooter />
+        {/* Keep reading: either direction. */}
+        <nav className="cs-more" aria-label="More case studies">
+          <Link href={`/work/${previous.slug}`}>
+            <span className="eyebrow">Previous</span>
+            <span className="cs-more-title">{previous.title}</span>
+          </Link>
+          <Link href={`/work/${next.slug}`} className="is-next">
+            <span className="eyebrow">Next</span>
+            <span className="cs-more-title">{next.title}</span>
+          </Link>
+        </nav>
+      </article>
+
+      {/* The shared footer sits outside `.cs` so the case-study text styles
+          don't restyle it. */}
+      <div className="relative z-10 px-5 pb-[52px] md:px-6 md:pb-[58px]">
+        <div className="mx-auto max-w-[880px]">
+          <SiteFooter />
+        </div>
       </div>
     </main>
   );

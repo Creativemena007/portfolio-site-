@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { EscapeHome } from "@/components/escape-home";
+import { CurrentSection, RevealAll } from "@/components/reading";
 import { SiteFooter } from "@/components/site-footer";
 import { PUBLICATIONS } from "@/data/publications";
 
 import { Content } from "./content";
 import { Lightbox } from "./lightbox";
-import { CurrentSection, HeroParallax } from "./page-effects";
-import { RevealAll } from "./reveal-all";
+import { HeroParallax } from "./page-effects";
 import "./publication.css";
 
 const pub = PUBLICATIONS.find((p) => p.slug === "echo-to-council")!;
@@ -72,9 +72,9 @@ export default function EchoToCouncilPage() {
             <ArrowBack />
             Home
           </Link>
-          <CurrentSection scope=".pub" />
+          <CurrentSection scope=".pub" idle="Publication" />
         </nav>
-        <div className="pub-progress" aria-hidden />
+        <div className="read-progress" aria-hidden />
       </div>
 
       <div
