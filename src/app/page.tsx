@@ -14,18 +14,7 @@ import { getImageMetaMap } from "@/lib/image-size";
 
 /* ------------------------------- Content ------------------------------- */
 
-// Two lists, one row style. "Writing & Projects" is the work outside client
-// projects (the publication sits above it as the featured row); "Side Quest"
-// is life outside design.
-const WRITING_AND_PROJECTS: ListItem[] = [
-  {
-    img: "dont-grow-up",
-    variant: "cover",
-    title: "Don’t Grow Up",
-    subtitle:
-      "A book about adulthood, curiosity and the parts of ourselves worth protecting.",
-    href: "https://www.amazon.com/dp/B0GFG5FFK1",
-  },
+const PERSONAL: ListItem[] = [
   {
     img: "irl",
     variant: "cover",
@@ -51,6 +40,14 @@ const WRITING_AND_PROJECTS: ListItem[] = [
 
 const SIDE_QUEST: ListItem[] = [
   {
+    img: "dont-grow-up",
+    variant: "cover",
+    title: "Don’t Grow Up",
+    subtitle:
+      "A book about adulthood, curiosity and the parts of ourselves worth protecting.",
+    href: "https://www.amazon.com/dp/B0GFG5FFK1",
+  },
+  {
     img: "playground",
     variant: "cover",
     title: "The Playground",
@@ -67,6 +64,9 @@ const SIDE_QUEST: ListItem[] = [
       "Long runs, heavy lifts, unfamiliar places and the moments between them.",
     href: "/life-away",
   },
+];
+
+const BONUS: ListItem[] = [
   {
     img: "spotify",
     variant: "white-contain",
@@ -96,7 +96,7 @@ export default async function Home() {
   // image's own colour for the hover glow on cards and rows.
   const thumb = (item: { img?: string; imgExt?: string }) =>
     `/images/${item.img}.${item.imgExt ?? "png"}`;
-  const lists = [...PUBLICATIONS, ...WRITING_AND_PROJECTS, ...SIDE_QUEST];
+  const lists = [...PUBLICATIONS, ...PERSONAL, ...SIDE_QUEST, ...BONUS];
   const meta = await getImageMetaMap([
     ...PROJECTS.map((p) => `/images/${p.img}.png`),
     ...lists.map(thumb),
@@ -260,10 +260,9 @@ export default async function Home() {
               </Reveal>
             </section>
 
-            {/* WRITING & PROJECTS — the publication leads as a full-width
-                row, then everything else in a two-column grid. */}
+            {/* PUBLICATIONS */}
             <section className="flex flex-col gap-5">
-              <SectionLabel>Writing &amp; Projects</SectionLabel>
+              <SectionLabel>Publications</SectionLabel>
               <Reveal stagger className="flex flex-col gap-[18px]">
                 {PUBLICATIONS.map((p) => (
                   <ListRow
@@ -281,24 +280,39 @@ export default async function Home() {
                   />
                 ))}
               </Reveal>
+            </section>
+
+            {/* PERSONAL PROJECTS */}
+            <section className="flex flex-col gap-5">
+              <SectionLabel>Personal Projects</SectionLabel>
               <Reveal
                 stagger
                 className="grid grid-cols-1 gap-[18px] md:grid-cols-2"
               >
-                {WRITING_AND_PROJECTS.map((item) => (
+                {PERSONAL.map((item) => (
                   <ListRow key={item.title} item={withTint(item)} />
                 ))}
               </Reveal>
             </section>
 
-            {/* SIDE QUEST — life outside design. */}
+            {/* SIDE QUEST */}
             <section className="flex flex-col gap-5">
               <SectionLabel>Side Quest</SectionLabel>
+              <Reveal stagger className="flex flex-col gap-[18px]">
+                {SIDE_QUEST.map((item) => (
+                  <ListRow key={item.title} item={withTint(item)} size="lg" />
+                ))}
+              </Reveal>
+            </section>
+
+            {/* BONUS */}
+            <section className="flex flex-col gap-5">
+              <SectionLabel>Bonus</SectionLabel>
               <Reveal
                 stagger
                 className="grid grid-cols-1 gap-[18px] md:grid-cols-2"
               >
-                {SIDE_QUEST.map((item) => (
+                {BONUS.map((item) => (
                   <ListRow key={item.title} item={withTint(item)} />
                 ))}
               </Reveal>

@@ -108,9 +108,9 @@ public/
   - *Static pages:* hover-only effects on bookshelf and life-away are gated to
     real pointers. Their long (0.75–0.85s) transitions are the book-pull and
     were left as deliberate.
-  - *Home sections:* Publications / Personal Projects / Side Quest / Bonus
-    became two — "Writing & Projects" (publication featured, then a 2×2 grid)
-    and "Side Quest" (2×2 grid) — all on one row style.
+  - *Home sections:* briefly merged into two, then **restored at the owner's
+    request** to Publications / Personal Projects / Side Quest / Bonus. He
+    prefers his original grouping — don't merge or rename these sections.
   - *Contact:* "Email me" is now the primary link, "Or message me on X" second.
   - *Bio:* "Zo" links to its case study. *Footer:* "© Orezi Mena".
   - *Not done (needs the owner):* a line saying what work he is open to and
