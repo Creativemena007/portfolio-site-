@@ -12,7 +12,13 @@ export function EscapeHome() {
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") router.push("/");
+      if (e.key !== "Escape") return;
+      // A keyboard action should be instant: suppress the route fade and the
+      // header entrance on the page we land on (see globals.css).
+      const root = document.documentElement;
+      root.dataset.instant = "true";
+      window.setTimeout(() => delete root.dataset.instant, 1200);
+      router.push("/");
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   ListItem,
   ListRow,
@@ -13,7 +14,18 @@ import { getImageMetaMap } from "@/lib/image-size";
 
 /* ------------------------------- Content ------------------------------- */
 
-const PERSONAL: ListItem[] = [
+// Two lists, one row style. "Writing & Projects" is the work outside client
+// projects (the publication sits above it as the featured row); "Side Quest"
+// is life outside design.
+const WRITING_AND_PROJECTS: ListItem[] = [
+  {
+    img: "dont-grow-up",
+    variant: "cover",
+    title: "Don’t Grow Up",
+    subtitle:
+      "A book about adulthood, curiosity and the parts of ourselves worth protecting.",
+    href: "https://www.amazon.com/dp/B0GFG5FFK1",
+  },
   {
     img: "irl",
     variant: "cover",
@@ -39,14 +51,6 @@ const PERSONAL: ListItem[] = [
 
 const SIDE_QUEST: ListItem[] = [
   {
-    img: "dont-grow-up",
-    variant: "cover",
-    title: "Don’t Grow Up",
-    subtitle:
-      "A book about adulthood, curiosity and the parts of ourselves worth protecting.",
-    href: "https://www.amazon.com/dp/B0GFG5FFK1",
-  },
-  {
     img: "playground",
     variant: "cover",
     title: "The Playground",
@@ -63,9 +67,6 @@ const SIDE_QUEST: ListItem[] = [
       "Long runs, heavy lifts, unfamiliar places and the moments between them.",
     href: "/life-away",
   },
-];
-
-const BONUS: ListItem[] = [
   {
     img: "spotify",
     variant: "white-contain",
@@ -95,14 +96,14 @@ export default async function Home() {
   // image's own colour for the hover glow on cards and rows.
   const thumb = (item: { img?: string; imgExt?: string }) =>
     `/images/${item.img}.${item.imgExt ?? "png"}`;
-  const lists = [...PUBLICATIONS, ...PERSONAL, ...SIDE_QUEST, ...BONUS];
+  const lists = [...PUBLICATIONS, ...WRITING_AND_PROJECTS, ...SIDE_QUEST];
   const meta = await getImageMetaMap([
     ...PROJECTS.map((p) => `/images/${p.img}.png`),
     ...lists.map(thumb),
   ]);
   // An explicit tint in the data wins over the one read from the image.
   const withTint = <T extends { img?: string; imgExt?: string; tint?: string }>(
-    item: T
+    item: T,
   ) => ({
     ...item,
     tint: item.tint ?? meta[thumb(item)]?.tint,
@@ -184,7 +185,14 @@ export default async function Home() {
                     >
                       Next Green Tech
                     </a>{" "}
-                    and <span className="text-cream-dim">Zo</span>.
+                    and{" "}
+                    <Link
+                      href="/work/zo"
+                      className="font-normal text-cream-dim decoration-1 underline-offset-4 transition-colors hover:underline"
+                    >
+                      Zo
+                    </Link>
+                    .
                   </p>
                   <p>
                     Away from the screen, I write, speak, run unreasonable
@@ -194,16 +202,14 @@ export default async function Home() {
                 </div>
               </div>
 
-              {/* Contact */}
-              <div className="enter enter-d3 flex items-center gap-7">
+              {/* Contact — email is the primary route; X is the casual one. */}
+              <div className="enter enter-d3 flex flex-wrap items-center gap-x-7 gap-y-3">
                 <a
-                  href="https://x.com/Thecreativemena"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="mailto:hello@thecreativemena.com"
                   className="group flex items-center gap-1.5 text-[16px] tracking-normal text-cream"
                 >
                   <span className="decoration-1 underline-offset-4 group-hover:underline">
-                    Send a message
+                    Email me
                   </span>
                   <img
                     src="/images/icon-arrow-diag.svg"
@@ -213,10 +219,12 @@ export default async function Home() {
                   />
                 </a>
                 <a
-                  href="mailto:hello@thecreativemena.com"
+                  href="https://x.com/Thecreativemena"
+                  target="_blank"
+                  rel="noreferrer"
                   className="text-[16px] tracking-normal text-cream decoration-1 underline-offset-4 hover:underline"
                 >
-                  Prefer email?
+                  Or message me on X
                 </a>
               </div>
             </header>
@@ -229,7 +237,8 @@ export default async function Home() {
                 className="breathe size-[10px] shrink-0 rounded-full bg-accent shadow-[0_0_10px_rgb(245_132_4/0.6)]"
               />
               <p className="shimmer-text text-[14px] italic tracking-normal md:text-[16px]">
-                Currently designing, writing, running, and trying not to grow up.
+                Currently designing, writing, running, and trying not to grow
+                up.
               </p>
             </div>
           </div>
@@ -251,9 +260,10 @@ export default async function Home() {
               </Reveal>
             </section>
 
-            {/* PUBLICATIONS */}
+            {/* WRITING & PROJECTS — the publication leads as a full-width
+                row, then everything else in a two-column grid. */}
             <section className="flex flex-col gap-5">
-              <SectionLabel>Publications</SectionLabel>
+              <SectionLabel>Writing &amp; Projects</SectionLabel>
               <Reveal stagger className="flex flex-col gap-[18px]">
                 {PUBLICATIONS.map((p) => (
                   <ListRow
@@ -271,39 +281,24 @@ export default async function Home() {
                   />
                 ))}
               </Reveal>
-            </section>
-
-            {/* PERSONAL PROJECTS */}
-            <section className="flex flex-col gap-5">
-              <SectionLabel>Personal Projects</SectionLabel>
               <Reveal
                 stagger
                 className="grid grid-cols-1 gap-[18px] md:grid-cols-2"
               >
-                {PERSONAL.map((item) => (
+                {WRITING_AND_PROJECTS.map((item) => (
                   <ListRow key={item.title} item={withTint(item)} />
                 ))}
               </Reveal>
             </section>
 
-            {/* SIDE QUEST */}
+            {/* SIDE QUEST — life outside design. */}
             <section className="flex flex-col gap-5">
               <SectionLabel>Side Quest</SectionLabel>
-              <Reveal stagger className="flex flex-col gap-[18px]">
-                {SIDE_QUEST.map((item) => (
-                  <ListRow key={item.title} item={withTint(item)} size="lg" />
-                ))}
-              </Reveal>
-            </section>
-
-            {/* BONUS */}
-            <section className="flex flex-col gap-5">
-              <SectionLabel>Bonus</SectionLabel>
               <Reveal
                 stagger
                 className="grid grid-cols-1 gap-[18px] md:grid-cols-2"
               >
-                {BONUS.map((item) => (
+                {SIDE_QUEST.map((item) => (
                   <ListRow key={item.title} item={withTint(item)} />
                 ))}
               </Reveal>

@@ -23,7 +23,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
                      source of truth: the same `y` value drives both), so it
                      is always exactly as faded as the image is pulled away.
   - Not far enough → springs back, starting from the release velocity.
-  Keyboard: ←/→ to move, Esc to close. Focus moves into the viewer and
+  Keyboard: ←/→ to move (instantly, no animation), Esc to close. Focus moves into the viewer and
   returns to the screenshot that opened it.
 
   Esc is caught in the capture phase and stopped, because the page also has
@@ -43,6 +43,9 @@ export function Lightbox({ scope }: { scope: string }) {
   const opener = useRef<HTMLElement | null>(null);
   const dialog = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+  // Arrow keys get pressed in quick succession, so a keyboard move swaps the
+  // image with no animation. Swipes and button clicks keep the settle-in.
+  const [instant, setInstant] = useState(false);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -58,7 +61,8 @@ export function Lightbox({ scope }: { scope: string }) {
   }, []);
 
   const go = useCallback(
-    (step: number) => {
+    (step: number, viaKeyboard = false) => {
+      setInstant(viaKeyboard);
       setIndex((i) => {
         if (i === null) return i;
         const next = i + step;
@@ -96,6 +100,7 @@ export function Lightbox({ scope }: { scope: string }) {
       x.set(0);
       y.set(0);
       setItems(list);
+      setInstant(false);
       setIndex(Math.max(0, buttons.indexOf(button)));
     }
     document.addEventListener("click", onClick);
@@ -110,9 +115,9 @@ export function Lightbox({ scope }: { scope: string }) {
         e.stopPropagation();
         close();
       } else if (e.key === "ArrowRight") {
-        go(1);
+        go(1, true);
       } else if (e.key === "ArrowLeft") {
-        go(-1);
+        go(-1, true);
       } else if (e.key === "Tab") {
         // Keep focus inside the viewer.
         const focusable = dialog.current?.querySelectorAll<HTMLElement>(
@@ -201,7 +206,11 @@ export function Lightbox({ scope }: { scope: string }) {
               key={index}
               className="pub-lb-shot"
               initial={
-                reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96 }
+                instant
+                  ? false
+                  : reduceMotion
+                    ? { opacity: 0 }
+                    : { opacity: 0, scale: 0.96 }
               }
               animate={{ opacity: 1, scale: 1 }}
               transition={reduceMotion ? { duration: 0.15 } : spring}

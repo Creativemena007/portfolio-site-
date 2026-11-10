@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export { Clip } from "./clip";
 
-const DIR = "/images/publications/echo-to-council";
+const DIR = "/images/publications/the-idea-was-right";
 
 // Phone screenshots are 393×852; the two full-length "outcome" captures are
 // taller. next/image needs the real size to reserve space (no layout shift).

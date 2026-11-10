@@ -19,7 +19,7 @@ export function SiteFooter({ className = "" }: { className?: string }) {
       className={`mt-24 flex flex-col gap-5 text-[16px] tracking-normal sm:flex-row sm:items-center sm:justify-between ${className}`}
     >
       <p className="font-medium text-cream">
-        &copy; {new Date().getFullYear()} Thecreativemena
+        &copy; {new Date().getFullYear()} Orezi Mena
       </p>
       <nav className="flex items-center gap-[30px] text-muted-2">
         {LINKS.map((l) => (

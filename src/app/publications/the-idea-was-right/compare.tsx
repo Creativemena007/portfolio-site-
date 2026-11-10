@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-const DIR = "/images/publications/echo-to-council";
+const DIR = "/images/publications/the-idea-was-right";
 
 /*
   Before/after comparison: one phone frame, drag across it to wipe between the

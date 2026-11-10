@@ -91,6 +91,36 @@ public/
 ## Changelog — what we've done
 
 ### 2026-11-10
+- **Audit fixes (motion + design).**
+  - *Header calmed:* the avatar bounce is gone (the one-time socials peek is
+    the invitation now); the shimmer text runs three passes then rests; the
+    breathing dot is the only loop left. Don't add another loop to the header.
+  - *Timing:* socials open in 300ms and close in 200ms (exit faster than
+    entrance); avatar tilt 300ms.
+  - *Press feedback:* text links dim while held (`a:not(.card-press):active`
+    in `globals.css`).
+  - *Keyboard is instant:* arrow keys in the screenshot viewer swap images
+    with no animation; Esc-to-home sets `html[data-instant]` briefly so the
+    route fade and header entrance don't replay.
+  - *Touch targets:* social icons carry a 45px hit area; viewer buttons 44px.
+  - *Section label:* switches without animation when sections change within
+    400ms (fast scroll).
+  - *Static pages:* hover-only effects on bookshelf and life-away are gated to
+    real pointers. Their long (0.75–0.85s) transitions are the book-pull and
+    were left as deliberate.
+  - *Home sections:* Publications / Personal Projects / Side Quest / Bonus
+    became two — "Writing & Projects" (publication featured, then a 2×2 grid)
+    and "Side Quest" (2×2 grid) — all on one row style.
+  - *Contact:* "Email me" is now the primary link, "Or message me on X" second.
+  - *Bio:* "Zo" links to its case study. *Footer:* "© Orezi Mena".
+  - *Not done (needs the owner):* a line saying what work he is open to and
+    where he is based; a Drift case study; whether to bring the side pages'
+    serif into the main site.
+- **Publication URL renamed** to `/publications/the-idea-was-right` (route
+  folder and both asset folders renamed to match). The old
+  `/publications/echo-to-council` address 308-redirects to it via
+  `redirects()` in `next.config.ts`. Older changelog entries below still use
+  the old path when describing the first build.
 - **Case-study pages redesigned** (`src/app/work/[slug]/page.tsx`, styles under
   `.cs` in `globals.css`).
   - One left edge on an 880px column; text stops at 680px, figures and section
@@ -180,9 +210,9 @@ public/
     restyles all of them, scoped under `.pub`. The three SVG diagrams read CSS
     variables (`--accent`, `--dim`, `--line` …) that `.pub` remaps to the
     cream/near-black palette, so they recolour without touching the SVGs.
-  - Media: screenshots in `public/images/publications/echo-to-council/`
+  - Media: screenshots in `public/images/publications/the-idea-was-right/`
     (`<Shot>`, next/image); six recordings + posters in
-    `public/videos/publications/echo-to-council/` (`<Clip>`: `preload="none"`,
+    `public/videos/publications/the-idea-was-right/` (`<Clip>`: `preload="none"`,
     plays only while on screen, controls instead of autoplay under reduced
     motion).
   - `reveal-all.tsx` flips `data-visible` on every `.pub .reveal` block, reusing

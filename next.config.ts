@@ -7,6 +7,17 @@ const nextConfig: NextConfig = {
     // connections; 75 is the default full-quality tier.
     qualities: [40, 75],
   },
+  // The first publication launched at /publications/echo-to-council before
+  // it was retitled. Keep the old address working for links already shared.
+  async redirects() {
+    return [
+      {
+        source: "/publications/echo-to-council",
+        destination: "/publications/the-idea-was-right",
+        permanent: true,
+      },
+    ];
+  },
   // Clean URLs for the standalone static pages in /public: link to /bookshelf
   // and /life-away (no .html); the files themselves keep their extension.
   async rewrites() {

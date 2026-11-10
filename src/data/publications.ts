@@ -24,8 +24,8 @@ export type Publication = {
 
 export const PUBLICATIONS: Publication[] = [
   {
-    slug: "echo-to-council",
-    href: "/publications/echo-to-council",
+    slug: "the-idea-was-right",
+    href: "/publications/the-idea-was-right",
     title: "The Idea Was Right. The Technology Wasn’t Ready.",
     subtitle:
       "Revisiting the AI experiences we designed at Zo in 2024, and what two years of progress make possible.",
@@ -35,7 +35,7 @@ export const PUBLICATIONS: Publication[] = [
     // Source is cover-council.svg beside it (re-export the PNG after edits).
     // glyph-set.svg in the same folder holds the sibling glyphs (echo, debate,
     // clock) in the same style, for future publications.
-    img: "publications/echo-to-council/cover-council",
+    img: "publications/the-idea-was-right/cover-council",
     tint: "150 90 255",
   },
 ];

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /*
   Shared behaviours for long-form pages (case studies and publications).
@@ -55,6 +55,10 @@ export function CurrentSection({
   className?: string;
 }) {
   const [label, setLabel] = useState(idle);
+  // When sections fly past (fast scroll), animating every change flickers.
+  // A change that follows the previous one within 400ms switches instantly.
+  const [instant, setInstant] = useState(false);
+  const lastChange = useRef(0);
 
   useEffect(() => {
     const sections = Array.from(
@@ -71,7 +75,11 @@ export function CurrentSection({
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) setLabel(name(entry.target as HTMLElement));
+          if (!entry.isIntersecting) continue;
+          const now = performance.now();
+          setInstant(now - lastChange.current < 400);
+          lastChange.current = now;
+          setLabel(name(entry.target as HTMLElement));
         }
       },
       // A thin band across the middle of the viewport.
@@ -99,7 +107,9 @@ export function CurrentSection({
       href="#top"
       className={`read-current transition-colors hover:text-cream ${className}`}
     >
-      <span key={label}>{label}</span>
+      <span key={label} data-instant={instant}>
+        {label}
+      </span>
     </a>
   );
 }

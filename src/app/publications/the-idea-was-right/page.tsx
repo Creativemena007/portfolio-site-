@@ -11,7 +11,7 @@ import { Lightbox } from "./lightbox";
 import { HeroParallax } from "./page-effects";
 import "./publication.css";
 
-const pub = PUBLICATIONS.find((p) => p.slug === "echo-to-council")!;
+const pub = PUBLICATIONS.find((p) => p.slug === "the-idea-was-right")!;
 
 export const metadata: Metadata = {
   // The root title template renders this as "<title> — Mena".
@@ -54,7 +54,7 @@ function ArrowBack() {
   );
 }
 
-export default function EchoToCouncilPage() {
+export default function PublicationPage() {
   return (
     <main className="relative min-h-screen">
       <EscapeHome />

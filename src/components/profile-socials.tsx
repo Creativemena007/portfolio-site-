@@ -8,6 +8,8 @@ import { useEffect, useRef, useState } from "react";
 
   The socials stay tucked behind the avatar and slide out to the right. Uses a
   0fr→1fr grid track so the reveal animates width without a fixed magic number.
+  They open in 300ms and close in 200ms: an exit should be quicker than an
+  entrance. Each 37px icon carries an invisible 45px hit area for touch.
 
   - Mouse: hover the group to reveal (Tailwind's hover variants only apply on
     devices that can hover, so this never sticks on touch).
@@ -24,9 +26,6 @@ import { useEffect, useRef, useState } from "react";
   they move before anyone has to guess. The peek is skipped under reduced
   motion and cancelled the moment the visitor interacts.
 
-  After that, the avatar bounces on a loop to invite that first interaction (see
-  `.avatar-bounce` in globals.css). Once the visitor has opened the socials the
-  invitation has done its job, so the bounce stops for good.
 */
 
 const SOCIALS = [
@@ -170,9 +169,7 @@ export function ProfileSocials() {
         }}
         className="shrink-0 cursor-grab touch-pan-y select-none rounded-full outline-offset-4 [-webkit-tap-highlight-color:transparent] active:cursor-grabbing"
       >
-        {/* The bounce lives on an inner wrapper so its transform never
-            collides with the drag transform on the button. */}
-        <span className={`block ${engaged ? "" : "avatar-bounce"}`}>
+        <span className="block">
           <Image
             src="/images/profile.png"
             alt="Mena"
@@ -180,14 +177,14 @@ export function ProfileSocials() {
             height={84}
             priority
             draggable={false}
-            className="size-[84px] rounded-full object-cover transition-transform duration-500 ease-out group-hover:rotate-[-8deg] group-hover:scale-105 group-data-[open=true]:rotate-[-8deg] group-data-[open=true]:scale-105 active:scale-95"
+            className="size-[84px] rounded-full object-cover transition-transform duration-300 ease-out group-hover:rotate-[-8deg] group-hover:scale-105 group-data-[open=true]:rotate-[-8deg] group-data-[open=true]:scale-105 active:scale-95"
           />
         </span>
       </button>
-      <div className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-500 ease-out group-hover:grid-cols-[1fr] group-has-[:focus-visible]:grid-cols-[1fr] group-data-[open=true]:grid-cols-[1fr]">
+      <div className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-200 ease-out group-hover:duration-300 group-has-[:focus-visible]:duration-300 group-data-[open=true]:duration-300 group-hover:grid-cols-[1fr] group-has-[:focus-visible]:grid-cols-[1fr] group-data-[open=true]:grid-cols-[1fr]">
         <div
           id="profile-socials"
-          className="flex min-w-0 items-center gap-1.5 overflow-hidden opacity-0 -translate-x-3 transition-[opacity,transform] duration-500 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-has-[:focus-visible]:translate-x-0 group-has-[:focus-visible]:opacity-100 group-data-[open=true]:translate-x-0 group-data-[open=true]:opacity-100"
+          className="flex min-w-0 items-center gap-1.5 overflow-hidden opacity-0 -translate-x-3 transition-[opacity,transform] duration-200 ease-out group-hover:duration-300 group-has-[:focus-visible]:duration-300 group-data-[open=true]:duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-has-[:focus-visible]:translate-x-0 group-has-[:focus-visible]:opacity-100 group-data-[open=true]:translate-x-0 group-data-[open=true]:opacity-100"
         >
           {SOCIALS.map((s) => (
             <a
@@ -196,7 +193,7 @@ export function ProfileSocials() {
               target="_blank"
               rel="noreferrer"
               aria-label={s.label}
-              className="group/social flex size-[37px] shrink-0 items-center justify-center rounded-full bg-surface-2 transition-[background-color,transform] duration-200 ease-out hover:scale-105 hover:bg-white/[0.12] active:scale-95"
+              className="group/social relative flex size-[37px] before:absolute before:-inset-1 before:content-[''] shrink-0 items-center justify-center rounded-full bg-surface-2 transition-[background-color,transform] duration-200 ease-out hover:scale-105 hover:bg-white/[0.12] active:scale-95"
             >
               <img
                 src={`/images/${s.icon}.svg`}

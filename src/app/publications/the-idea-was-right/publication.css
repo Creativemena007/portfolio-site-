@@ -1082,8 +1082,9 @@
 .pub-lb-close {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  /* 44px: the minimum comfortable touch target. */
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   color: var(--color-cream);
   cursor: pointer;

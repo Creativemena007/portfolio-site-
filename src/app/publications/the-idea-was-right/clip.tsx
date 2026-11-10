@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const DIR = "/videos/publications/echo-to-council";
+const DIR = "/videos/publications/the-idea-was-right";
 
 /*
   Screen recording that behaves like a looping GIF, without the cost.

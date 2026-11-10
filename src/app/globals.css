@@ -70,6 +70,25 @@ html {
 }
 
 /* -------------------------------------------------------------------------
+   Press feedback for text links. Cards and buttons have their own (a small
+   scale); a link just dims while it is held, so every pressable thing
+   confirms the press.
+   ------------------------------------------------------------------------- */
+a:not(.card-press):active {
+  opacity: 0.7;
+}
+
+/* -------------------------------------------------------------------------
+   Keyboard-initiated navigation is instant. EscapeHome sets this attribute
+   for a moment when Esc sends the visitor home, so the route fade and the
+   header entrance don't replay for an action people repeat quickly.
+   ------------------------------------------------------------------------- */
+html[data-instant] .route-fade,
+html[data-instant] .enter {
+  animation: none !important;
+}
+
+/* -------------------------------------------------------------------------
    Card tint — on hover, a card picks up a faint glow in its own image's
    colour (set as --tint: "r g b" by WorkCard / ListRow; read at build time
    by src/lib/image-size.ts). The glow sits behind the card's content and
@@ -128,44 +147,6 @@ html {
   }
   50% {
     opacity: 1;
-  }
-}
-
-/* Game-style "tap me" bounce for the avatar: rest, crouch (anticipation
-   squash), leap with a stretch, land with a squash, one smaller rebound, settle.
-   Squash and stretch pivot from the feet (transform-origin: bottom) so it reads
-   as a character hopping rather than a circle resizing. Each keyframe sets the
-   easing for the segment that follows it: ease-out going up, ease-in coming
-   down, like gravity. */
-@keyframes avatar-bounce {
-  0%,
-  58% {
-    transform: none;
-    animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
-  }
-  64% {
-    transform: scale(1.08, 0.9);
-    animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
-  }
-  72% {
-    transform: translateY(-16px) scale(0.94, 1.08);
-    animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.4);
-  }
-  79% {
-    transform: scale(1.1, 0.88);
-    animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
-  }
-  85% {
-    transform: translateY(-6px) scale(0.98, 1.03);
-    animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.4);
-  }
-  90% {
-    transform: scale(1.04, 0.96);
-    animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
-  }
-  95%,
-  100% {
-    transform: none;
   }
 }
 
@@ -257,19 +238,6 @@ html {
     animation: breathe 2.4s var(--ease-in-out) infinite;
   }
 
-  /* 5 — avatar "tap me" bounce, about once every 3s. The component drops this
-     class after the visitor first engages (see profile-socials.tsx); it also
-     holds still while hovered so it doesn't fight the hover tilt. */
-  .avatar-bounce {
-    transform-origin: 50% 100%;
-    /* Starts after the socials' one-time peek on load has tucked back in
-       (see profile-socials.tsx), so the two never compete. */
-    animation: avatar-bounce 3s linear 3.6s infinite;
-  }
-  .avatar-bounce:hover {
-    animation-play-state: paused;
-  }
-
   /* 6 — status text: iOS slide-to-unlock silver shimmer */
   .shimmer-text {
     background: linear-gradient(
@@ -284,7 +252,9 @@ html {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: text-shimmer 4s var(--ease-in-out) infinite;
+    /* Three passes on load, then it rests. A sweep that never stops competes
+       with everything else in the header and repaints the text forever. */
+    animation: text-shimmer 4s var(--ease-in-out) 3 forwards;
   }
 }
 
@@ -354,6 +324,10 @@ body {
   .read-current span {
     animation: read-current-in 260ms var(--ease-out) both;
   }
+}
+/* Scrolling fast: the label just switches (set by CurrentSection). */
+.read-current span[data-instant="true"] {
+  animation: none;
 }
 @keyframes read-current-in {
   from {

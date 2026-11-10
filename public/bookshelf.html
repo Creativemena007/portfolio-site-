@@ -576,9 +576,9 @@
     border-bottom:1px solid var(--page-ink);
     padding-bottom:2px;
   }
-  .pageFace .buy:hover{opacity:.55}
+  @media (hover:hover) and (pointer:fine){.pageFace .buy:hover{opacity:.55}}
   .pageFace .buy span{display:inline-block;transition:transform .2s ease}
-  .pageFace .buy:hover span{transform:translateX(4px)}
+  @media (hover:hover) and (pointer:fine){.pageFace .buy:hover span{transform:translateX(4px)}}
   .pageFace .page-meta{
     margin-top:18px;padding-top:14px;
     border-top:1px solid rgba(26,25,24,.1);
@@ -672,10 +672,10 @@
     color:#726F64;text-decoration:none;
     transition:color .2s ease,opacity .3s ease;
   }
-  .site-nav a:hover,.site-nav a:focus-visible,
-  .nav-close:hover,.nav-close:focus-visible{color:#FDFCF8}
+  .site-nav a:focus-visible,.nav-close:focus-visible{color:#FDFCF8}
+  @media (hover:hover) and (pointer:fine){.site-nav a:hover,.nav-close:hover{color:#FDFCF8}}
   .site-nav svg,.nav-close svg{width:16px;height:16px;transition:transform .2s ease}
-  .site-nav a:hover svg{transform:translateX(-3px)}
+  @media (hover:hover) and (pointer:fine){.site-nav a:hover svg{transform:translateX(-3px)}}
   /* "Put it back" — right nav item; hidden until a book is open. Slides in a
      few px alongside the fade so the new action reads as arriving (§state). */
   .nav-close{
@@ -685,12 +685,12 @@
   }
   .nav-close.show{opacity:1;pointer-events:auto;transform:translateX(0)}
   .nav-close svg{width:13px;height:13px}
-  .nav-close:hover svg{transform:rotate(90deg)}
+  @media (hover:hover) and (pointer:fine){.nav-close:hover svg{transform:rotate(90deg)}}
   /* while a book is open, lift nav labels off the dimmed backdrop (§12 vibrancy) */
   body.reading .site-nav a,
   body.reading .nav-close{color:#A0A09D}
-  body.reading .site-nav a:hover,body.reading .site-nav a:focus-visible,
-  body.reading .nav-close:hover,body.reading .nav-close:focus-visible{color:#FDFCF8}
+  body.reading .site-nav a:focus-visible,body.reading .nav-close:focus-visible{color:#FDFCF8}
+  @media (hover:hover) and (pointer:fine){body.reading .site-nav a:hover,body.reading .nav-close:hover{color:#FDFCF8}}
 
   /* cover type personalities mirror the spines */
   .t-kleon .cover-title{font-family:'Archivo';font-weight:900;text-transform:uppercase}
