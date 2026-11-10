@@ -604,12 +604,16 @@ body {
 }
 .cs-stats > div {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 14px;
   padding-top: 24px;
   border-top: 1px solid var(--line);
 }
 .cs-stats dd {
+  /* The figure comes first visually (the label is first in the markup, as a
+     definition list requires), so figures line up across the row whatever
+     the label lengths. */
+  order: -1;
   font-size: clamp(38px, 5vw, 56px);
   font-weight: 500;
   line-height: 1;

@@ -264,6 +264,25 @@ export const PROJECTS: Project[] = [
         ],
       },
 
+      { type: "heading", text: "Where Jito Went Next" },
+      {
+        type: "text",
+        body: "I finished this work in July 2023. The numbers below are Jito’s own public milestones since then, taken from press and on-chain trackers. They are the product’s growth, not a result I’m claiming for the design alone.",
+      },
+      {
+        type: "stats",
+        items: [
+          {
+            value: "$1.4B",
+            label: "total value locked by May 2024, when Jito became the largest protocol on Solana (The Block)",
+          },
+          {
+            value: "$3B+",
+            label: "peak total value locked in 2025 (DefiLlama)",
+          },
+        ],
+      },
+
       { type: "heading", text: "Final Thoughts" },
       {
         type: "text",
@@ -290,6 +309,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "zo",
     img: "work-zo",
+    hero: "/images/work-zo.png",
     title: "Zo",
     headline: "Zo: From Crypto Communities to AI Conversations",
     category: "CHAT // AI",
@@ -617,6 +637,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "ngx",
     img: "work-ngx",
+    hero: "/images/work-ngx.png",
     title: "NGX",
     headline:
       "Reality: Designing the Foundation of NGX’s Climate Infrastructure",
@@ -1400,11 +1421,12 @@ export const PROJECTS: Project[] = [
   {
     slug: "arc",
     img: "work-arc",
+    hero: "/images/work-arc.png",
     title: "Arc",
     headline: "Arc: One Aggregator for the Entire Crypto Market",
     category: "BLOCKCHAIN",
     description:
-      "ARC is a web three solution that makes you manage your entire crypto market from the palm of your hand by connecting the world of DEX, CEX and NFT on multiple blockchains effortlessly.",
+      "I joined Arc as its only designer and worked with the CEO to redesign a web3 aggregator that brings DEX, CEX and NFT investments into one dashboard. I later led a second designer across the aggregator and its NFT marketplace.",
     meta: [
       { label: "Completion", value: "August 2021" },
       { label: "Industry", value: "Blockchain" },
@@ -1412,12 +1434,6 @@ export const PROJECTS: Project[] = [
       { label: "Services", value: "Research, Product & Web Design" },
     ],
     content: [
-      {
-        type: "image",
-        src: "/images/work-arc.png",
-        alt: "Arc — the aggregated crypto market dashboard",
-      },
-
       { type: "heading", text: "Background" },
       {
         type: "text",
@@ -1585,6 +1601,20 @@ export const PROJECTS: Project[] = [
       {
         type: "text",
         body: "The majority of Arc's users were mobile users from the research, so high priority had to be placed on the mobile designs to optimize the experience.",
+      },
+
+      { type: "heading", text: "Where Arc Went Next" },
+      {
+        type: "text",
+        body: "I finished this work in August 2021, when the project was still called DePo. What follows comes from public reporting and the project’s own announcements, not from my time on the team.",
+      },
+      {
+        type: "list",
+        items: [
+          "June 2021: DePo ran its public token sale on the Lemonade launchpad, pitched as a multi-market aggregator for centralized exchanges, decentralized exchanges and NFT marketplaces (CryptoSlate press release).",
+          "2022: the team continued the work under the name ARC.",
+          "The NFT marketplace later went live under the ARC name with a 1% transaction fee (the project’s own announcement).",
+        ],
       },
 
       { type: "heading", text: "Key Takeaways" },

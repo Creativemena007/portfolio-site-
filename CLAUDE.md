@@ -112,8 +112,19 @@ public/
     description that used to be the page summary, and the summary now says
     what the work was. *The new Jito summary is a draft written from the case
     study's own content — the owner should review it.*
-  - *Still open:* Zo has no hero image set; Jito and Arc open with no stated
-    outcome; Arc's summary reads as marketing copy.
+  - **Follow-up (web research, owner-approved):** Jito gained a "Where Jito
+    Went Next" section with two public figures — $1.4B TVL / largest protocol
+    on Solana in May 2024 (The Block, verified) and a $3B+ peak in 2025
+    (DefiLlama, via two secondary sources). Framed as the product's growth,
+    not a design result. Zo, NGX and Arc now use their home thumbnails as
+    heroes. Arc's summary was rewritten from its own "My Role" text.
+  - **Arc = DePo / ARC** (owner confirmed; CEO TJ Dunham). Added "Where Arc
+    Went Next": the June 2021 Lemonade token sale, the 2022 continuation as
+    ARC, and the NFT marketplace launch (1% fee). Sources are a press
+    release, IQ.wiki and the project's own Telegram channel — thin, so nothing
+    is stated as a metric. The company's later pivot away from the aggregator
+    was left out at the owner's request.
+  - `public/images/zo/hero.jpg` is an unused portrait photo, not a Zo image.
 - **Socials peek on load.** `profile-socials.tsx` slides the social links out
   once ~0.9s after load, holds ~1.7s, then tucks them back (`peek` state, kept
   separate from `open` so `aria-expanded` is unaffected). Skipped under
