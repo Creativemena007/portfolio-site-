@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /*
   Avatar + social links.
@@ -19,7 +19,12 @@ import { useRef, useState } from "react";
     rubber-band resistance, then springs home. The direction matches the way
     the links travel, so the gesture needs no explanation.
 
-  The avatar bounces on a loop to invite that first interaction (see
+  On load the socials introduce themselves: they slide out once, hold for a
+  moment, then tuck back behind the avatar — showing where they live and how
+  they move before anyone has to guess. The peek is skipped under reduced
+  motion and cancelled the moment the visitor interacts.
+
+  After that, the avatar bounces on a loop to invite that first interaction (see
   `.avatar-bounce` in globals.css). Once the visitor has opened the socials the
   invitation has done its job, so the bounce stops for good.
 */
@@ -50,6 +55,9 @@ function rubberBand(distance: number, limit: number) {
   return (distance * limit * c) / (limit + c * Math.abs(distance));
 }
 
+const PEEK_DELAY = 900; // ms after load before the socials slide out
+const PEEK_HOLD = 1700; // ms they stay out before tucking back in
+
 const OPEN_DISTANCE = 36; // px pulled right to open
 const CLOSE_DISTANCE = 24; // px pushed left to close
 const FLICK_VELOCITY = 0.45; // px/ms — a quick flick counts even if short
@@ -57,6 +65,26 @@ const FLICK_VELOCITY = 0.45; // px/ms — a quick flick counts even if short
 export function ProfileSocials() {
   const [open, setOpen] = useState(false);
   const [engaged, setEngaged] = useState(false);
+  // One-time introduction on load. Kept separate from `open` so the peek
+  // never changes what the button reports to assistive tech.
+  const [peek, setPeek] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Wait for the header's entrance to settle, then out → hold → back in.
+    const show = window.setTimeout(() => setPeek(true), PEEK_DELAY);
+    const hide = window.setTimeout(() => setPeek(false), PEEK_DELAY + PEEK_HOLD);
+    return () => {
+      window.clearTimeout(show);
+      window.clearTimeout(hide);
+    };
+  }, []);
+
+  // Any interaction ends the introduction early.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived reset: the visitor took over, so the scripted peek stops
+    if (engaged) setPeek(false);
+  }, [engaged]);
 
   // Drag bookkeeping lives in a ref and writes `transform` straight to the
   // button: no re-render per pointer move.
@@ -118,7 +146,7 @@ export function ProfileSocials() {
 
   return (
     <div
-      data-open={open}
+      data-open={open || peek}
       onMouseEnter={() => setEngaged(true)}
       className="enter enter-d1 group flex items-center gap-[10px]"
     >

@@ -262,7 +262,9 @@ html {
      holds still while hovered so it doesn't fight the hover tilt. */
   .avatar-bounce {
     transform-origin: 50% 100%;
-    animation: avatar-bounce 3s linear 1.2s infinite;
+    /* Starts after the socials' one-time peek on load has tucked back in
+       (see profile-socials.tsx), so the two never compete. */
+    animation: avatar-bounce 3s linear 3.6s infinite;
   }
   .avatar-bounce:hover {
     animation-play-state: paused;

@@ -90,6 +90,14 @@ public/
 ## Changelog — what we've done
 
 ### 2026-11-10
+- **Socials peek on load.** `profile-socials.tsx` slides the social links out
+  once ~0.9s after load, holds ~1.7s, then tucks them back (`peek` state, kept
+  separate from `open` so `aria-expanded` is unaffected). Skipped under
+  reduced motion; cancelled on any interaction. The avatar bounce now starts
+  after the peek (3.6s delay) so they never overlap.
+- **In Real Life** added as the first Personal Projects row (`public/images/irl.png`
+  is irl's own icon). Its link currently points at a single event page dated
+  22 Nov 2026 — replace with a public landing page when one exists.
 - **Colour system: one text ramp.** The section labels (`--color-label`,
   `#726f64`) were an olive grey sitting between two neutral greys, and failed
   contrast (3.8:1). All text greys now share the cream's faint warmth and
