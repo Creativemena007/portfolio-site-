@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
-import { Agentation } from "agentation";
+import { DevToolbar } from "@/components/dev-toolbar";
 import "./globals.css";
 import {
   SITE_DESCRIPTION,
@@ -99,7 +99,7 @@ export default function RootLayout({
       <body className="min-h-full antialiased">
         {children}
         <Analytics />
-        {process.env.NODE_ENV === "development" && <Agentation />}
+        {process.env.NODE_ENV === "development" && <DevToolbar />}
       </body>
     </html>
   );

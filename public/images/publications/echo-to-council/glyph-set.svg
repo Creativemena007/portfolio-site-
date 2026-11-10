@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="832" height="760" viewBox="0 0 832 760">
+  <!-- Flat, four-part cover: echo, debate, two years, council. No gradients. -->
+  <rect width="832" height="760" fill="#F2EFE6"/>
+  <g fill="none" stroke="#101010" stroke-width="34">
+    <!-- Echo: one voice repeating -->
+    <g transform="translate(226 198)">
+      <circle r="178" fill="#7A2BFF" stroke="none"/>
+      <circle r="116"/>
+      <circle r="54"/>
+    </g>
+    <!-- Debate: two sides facing each other -->
+    <g transform="translate(606 198)">
+      <circle r="178" fill="#F58404" stroke="none"/>
+      <path d="M-112 -84 L-34 0 L-112 84"/>
+      <path d="M112 -84 L34 0 L112 84"/>
+    </g>
+    <!-- Two years: the clock -->
+    <g transform="translate(226 562)">
+      <circle r="178" fill="#F6C544" stroke="none"/>
+      <circle r="112"/>
+      <path d="M0 -62 L0 0 L48 34"/>
+    </g>
+    <!-- Council: three voices become one answer -->
+    <g transform="translate(606 562)">
+      <circle r="178" fill="#101010" stroke="none"/>
+      <g stroke="#F2EFE6">
+        <path d="M-118 -84 L22 0"/>
+        <path d="M-118 0 L22 0"/>
+        <path d="M-118 84 L22 0"/>
+      </g>
+      <circle cx="62" r="48" fill="#F2EFE6" stroke="none"/>
+    </g>
+  </g>
+</svg>

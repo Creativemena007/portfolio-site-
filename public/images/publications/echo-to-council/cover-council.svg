@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="832" height="760" viewBox="0 0 832 760">
+  <!-- Council: three voices become one answer. Flat violet ground, one glyph. -->
+  <rect width="832" height="760" fill="#7A2BFF"/>
+  <g transform="translate(396 380)" fill="none" stroke="#101010" stroke-width="72">
+    <path d="M-250 -190 L70 0"/>
+    <path d="M-250 0 L70 0"/>
+    <path d="M-250 190 L70 0"/>
+    <circle cx="160" r="112" fill="#101010" stroke="none"/>
+  </g>
+</svg>

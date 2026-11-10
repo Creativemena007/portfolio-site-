@@ -1,12 +1,14 @@
-import Image from "next/image";
 import {
   ListItem,
   ListRow,
   SectionLabel,
   WorkCard,
 } from "@/components/portfolio";
+import { ProfileSocials } from "@/components/profile-socials";
 import { Reveal } from "@/components/reveal";
+import { SiteFooter } from "@/components/site-footer";
 import { PROJECTS } from "@/data/projects";
+import { PUBLICATIONS } from "@/data/publications";
 import { getImageMetaMap } from "@/lib/image-size";
 
 /* ------------------------------- Content ------------------------------- */
@@ -74,34 +76,30 @@ const BONUS: ListItem[] = [
   },
 ];
 
-const SOCIALS = [
-  { icon: "icon-x", label: "X", href: "https://x.com/Thecreativemena" },
-  {
-    icon: "icon-social2",
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/thecreativemena/",
-  },
-  {
-    icon: "icon-social3",
-    label: "Medium",
-    href: "https://medium.com/@thecreativemena",
-  },
-  {
-    icon: "icon-social1",
-    label: "Instagram",
-    href: "https://www.instagram.com/thecreativemena/",
-  },
-];
+// Links inside the headline: quiet underline at rest, full cream on hover.
+const HEADLINE_LINK =
+  "underline decoration-white/25 decoration-1 underline-offset-[5px] transition-colors hover:text-cream hover:decoration-cream";
 
 /* -------------------------------- Page --------------------------------- */
 
 export default async function Home() {
-  // Tiny blurred previews for the work-grid thumbnails, generated at build, so
-  // each card shows something instantly instead of a blank box while the real
-  // image downloads.
-  const workBlur = await getImageMetaMap(
-    PROJECTS.map((p) => `/images/${p.img}.png`)
-  );
+  // Build-time image data for the home page: tiny blurred previews for the
+  // work-grid thumbnails (so each card shows something instantly), and each
+  // image's own colour for the hover glow on cards and rows.
+  const thumb = (item: { img?: string; imgExt?: string }) =>
+    `/images/${item.img}.${item.imgExt ?? "png"}`;
+  const lists = [...PUBLICATIONS, ...PERSONAL, ...SIDE_QUEST, ...BONUS];
+  const meta = await getImageMetaMap([
+    ...PROJECTS.map((p) => `/images/${p.img}.png`),
+    ...lists.map(thumb),
+  ]);
+  // An explicit tint in the data wins over the one read from the image.
+  const withTint = <T extends { img?: string; imgExt?: string; tint?: string }>(
+    item: T
+  ) => ({
+    ...item,
+    tint: item.tint ?? meta[thumb(item)]?.tint,
+  });
 
   return (
     <main className="relative min-h-screen overflow-hidden">
@@ -112,52 +110,42 @@ export default async function Home() {
           <div className="flex flex-col gap-8">
             {/* ---------- Header ---------- */}
             <header className="flex max-w-[710px] flex-col gap-6">
-              {/* Profile + socials.
-                  Socials stay tucked behind the avatar and slide out to the
-                  right on hover/focus. Uses a 0fr→1fr grid track so the reveal
-                  animates width smoothly without a fixed magic number. */}
-              <div className="enter enter-d1 group flex items-center gap-[10px]">
-                {/* Avatar: a rare idle nudge hints it's interactive; on hover it
-                    tilts toward the socials as if tugging them out. Nudge pauses
-                    while hovering so the two motions don't fight. */}
-                <div className="avatar-nudge shrink-0 group-hover:[animation-play-state:paused]">
-                  <Image
-                    src="/images/profile.png"
-                    alt="Mena"
-                    width={84}
-                    height={84}
-                    priority
-                    className="size-[84px] rounded-full object-cover transition-transform duration-500 ease-out group-hover:rotate-[-8deg] group-hover:scale-105"
-                  />
-                </div>
-                <div className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-500 ease-out group-hover:grid-cols-[1fr] group-focus-within:grid-cols-[1fr]">
-                  <div className="flex min-w-0 items-center gap-1.5 overflow-hidden opacity-0 -translate-x-3 transition-[opacity,transform] duration-500 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-focus-within:translate-x-0 group-focus-within:opacity-100">
-                    {SOCIALS.map((s) => (
-                      <a
-                        key={s.icon}
-                        href={s.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={s.label}
-                        className="group/social flex size-[37px] shrink-0 items-center justify-center rounded-full bg-surface-2 transition-[background-color,transform] duration-200 ease-out hover:scale-105 hover:bg-white/[0.12] active:scale-95"
-                      >
-                        <img
-                          src={`/images/${s.icon}.svg`}
-                          alt=""
-                          className="size-[21px] opacity-70 transition-opacity duration-200 group-hover/social:opacity-100"
-                        />
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <ProfileSocials />
 
               {/* Bio */}
               <div className="enter enter-d2 flex flex-col gap-5">
-                <h1 className="text-[22px] font-medium leading-[1.3] tracking-[-0.015em] text-cream-dim md:text-[26px]">
-                  Designer, author, and a curious human.
+                <h1 className="text-[22px] font-normal leading-[1.3] tracking-[-0.015em] text-cream-dim md:text-[26px]">
+                  {/* Each identity links to its proof: the work below, the
+                      book, and Instagram (the Playground + life outside
+                      design). A thin dim underline marks them as links without
+                      cluttering the headline; it brightens on hover. */}
+                  <a href="#work" className={HEADLINE_LINK}>
+                    Designer
+                  </a>
+                  ,{" "}
+                  <a
+                    href="https://www.amazon.es/-/en/Dont-Grow-Up-Rediscovering-wonder/dp/B0GFG5FFK1"
+                    target="_blank"
+                    rel="noreferrer"
+                    className={HEADLINE_LINK}
+                  >
+                    author
+                  </a>
+                  , and a{" "}
+                  <a
+                    href="https://www.instagram.com/thecreativemena/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className={HEADLINE_LINK}
+                  >
+                    curious human
+                  </a>
+                  .
                   <br />
-                  Interested in what we build and how it shapes us.
+                  {/* The aside: same size, stepped back in tone. */}
+                  <span className="text-muted">
+                    Interested in what we build and how it shapes us.
+                  </span>
                 </h1>
                 <div className="flex flex-col gap-5 text-[15px] leading-[1.75] tracking-normal text-muted md:text-[16px]">
                   <p>
@@ -228,10 +216,10 @@ export default async function Home() {
 
             {/* ---------- Status ---------- */}
             <div className="enter enter-d4 flex items-center gap-2">
-              {/* Silver pulse dot */}
+              {/* Live dot — the accent colour is reserved for "live" signals */}
               <span
                 aria-hidden
-                className="breathe size-[10px] shrink-0 rounded-full bg-[#c9c9ce] shadow-[0_0_8px_rgba(201,201,206,0.5)]"
+                className="breathe size-[10px] shrink-0 rounded-full bg-accent shadow-[0_0_10px_rgb(245_132_4/0.6)]"
               />
               <p className="shimmer-text text-[14px] italic tracking-normal md:text-[16px]">
                 Currently designing, writing, running, and trying not to grow up.
@@ -242,14 +230,37 @@ export default async function Home() {
           {/* ---------- Sections ---------- */}
           <div className="flex flex-col gap-20 md:gap-[100px]">
             {/* MY WORK */}
-            <section className="flex flex-col gap-5">
+            <section id="work" className="flex scroll-mt-10 flex-col gap-5">
               <SectionLabel>My Work</SectionLabel>
               <Reveal stagger className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 {PROJECTS.map((w) => (
                   <WorkCard
                     key={w.slug}
                     work={w}
-                    blurDataURL={workBlur[`/images/${w.img}.png`]?.blurDataURL}
+                    blurDataURL={meta[`/images/${w.img}.png`]?.blurDataURL}
+                    tint={w.tint ?? meta[`/images/${w.img}.png`]?.tint}
+                  />
+                ))}
+              </Reveal>
+            </section>
+
+            {/* PUBLICATIONS */}
+            <section className="flex flex-col gap-5">
+              <SectionLabel>Publications</SectionLabel>
+              <Reveal stagger className="flex flex-col gap-[18px]">
+                {PUBLICATIONS.map((p) => (
+                  <ListRow
+                    key={p.slug}
+                    size="lg"
+                    item={withTint({
+                      img: p.img,
+                      imgExt: p.imgExt,
+                      variant: "cover" as const,
+                      title: p.title,
+                      subtitle: p.subtitle,
+                      href: p.href,
+                      tint: p.tint,
+                    })}
                   />
                 ))}
               </Reveal>
@@ -263,7 +274,7 @@ export default async function Home() {
                 className="grid grid-cols-1 gap-[18px] md:grid-cols-2"
               >
                 {PERSONAL.map((item) => (
-                  <ListRow key={item.title} item={item} />
+                  <ListRow key={item.title} item={withTint(item)} />
                 ))}
               </Reveal>
             </section>
@@ -273,7 +284,7 @@ export default async function Home() {
               <SectionLabel>Side Quest</SectionLabel>
               <Reveal stagger className="flex flex-col gap-[18px]">
                 {SIDE_QUEST.map((item) => (
-                  <ListRow key={item.title} item={item} size="lg" />
+                  <ListRow key={item.title} item={withTint(item)} size="lg" />
                 ))}
               </Reveal>
             </section>
@@ -286,43 +297,14 @@ export default async function Home() {
                 className="grid grid-cols-1 gap-[18px] md:grid-cols-2"
               >
                 {BONUS.map((item) => (
-                  <ListRow key={item.title} item={item} />
+                  <ListRow key={item.title} item={withTint(item)} />
                 ))}
               </Reveal>
             </section>
           </div>
         </div>
 
-        {/* ---------- Footer ---------- */}
-        <footer className="mt-24 flex flex-col gap-5 text-[16px] tracking-normal sm:flex-row sm:items-center sm:justify-between md:mt-40">
-          <p className="font-medium text-cream">&copy; 2026 Thecreativemena</p>
-          <nav className="flex items-center gap-[30px] text-muted-2">
-            <a
-              href="https://github.com/user-attachments/files/24366703/MENA.CV.2026.pdf"
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-cream"
-            >
-              Resume
-            </a>
-            <a
-              href="https://www.linkedin.com/in/thecreativemena/"
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-cream"
-            >
-              Linkedin
-            </a>
-            <a
-              href="https://x.com/Thecreativemena"
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-cream"
-            >
-              Twitter (X)
-            </a>
-          </nav>
-        </footer>
+        <SiteFooter className="md:mt-40" />
       </div>
     </main>
   );

@@ -15,13 +15,25 @@
      `white/10`, which reads cold and too strong against the cream palette). */
   --color-surface-hover: rgb(253 252 248 / 0.045);
 
-  /* Text */
+  /* Text — one ramp, one temperature.
+     Every step is the same faintly warm grey as the cream at the top, just
+     darker, so no step reads as a different colour (the old label was an
+     olive #726f64 between two neutral greys, and failed contrast at 3.8:1).
+     Contrast is against --color-bg; all steps pass AA (4.5:1) for text.
+
+       cream      primary text, headings            17.9:1
+       cream-dim  headline, emphasis in body        15.9:1
+       muted      body copy                          7.8:1
+       muted-2    secondary copy, captions           5.9:1
+       label      uppercase eyebrows and labels      4.7:1
+
+     Pick by role, not by eye. Don't add a sixth grey: if something needs to
+     sit between two steps, it belongs to one of them. */
   --color-cream: #fdfcf8;
   --color-cream-dim: #f3f0e9;
-  --color-muted: #a0a09d;
-  --color-muted-2: #888888;
-  --color-label: #726f64;
-  --color-italic: #afa88b;
+  --color-muted: #a8a69f;
+  --color-muted-2: #918f88;
+  --color-label: #807e77;
 
   /* Accent */
   --color-accent: #f58404;
@@ -40,6 +52,52 @@
 html {
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
+}
+
+/* -------------------------------------------------------------------------
+   Accent colour
+   The orange accent is reserved for "live" signals, so it always means the
+   same thing: the status dot, reading progress, selected text and keyboard
+   focus. Don't use it for decoration.
+   ------------------------------------------------------------------------- */
+::selection {
+  background: rgb(245 132 4 / 0.32);
+  color: var(--color-cream);
+}
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* -------------------------------------------------------------------------
+   Card tint — on hover, a card picks up a faint glow in its own image's
+   colour (set as --tint: "r g b" by WorkCard / ListRow; read at build time
+   by src/lib/image-size.ts). The glow sits behind the card's content and
+   only fades in for real pointers.
+   ------------------------------------------------------------------------- */
+.card-tint {
+  position: relative;
+  isolation: isolate;
+}
+.card-tint::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    120% 90% at 50% 0%,
+    rgb(var(--tint, 253 252 248) / 0.16),
+    transparent 72%
+  );
+  opacity: 0;
+  transition: opacity 300ms var(--ease-out);
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .card-tint:hover::before {
+    opacity: 1;
+  }
 }
 
 /* -------------------------------------------------------------------------
@@ -73,19 +131,41 @@ html {
   }
 }
 
-/* A quick, rare hop — most of the cycle is at rest, with one small bounce
-   near the end to signal the avatar is interactive. */
-@keyframes avatar-nudge {
+/* Game-style "tap me" bounce for the avatar: rest, crouch (anticipation
+   squash), leap with a stretch, land with a squash, one smaller rebound, settle.
+   Squash and stretch pivot from the feet (transform-origin: bottom) so it reads
+   as a character hopping rather than a circle resizing. Each keyframe sets the
+   easing for the segment that follows it: ease-out going up, ease-in coming
+   down, like gravity. */
+@keyframes avatar-bounce {
   0%,
-  82%,
+  58% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
+  }
+  64% {
+    transform: scale(1.08, 0.9);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
+  }
+  72% {
+    transform: translateY(-16px) scale(0.94, 1.08);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.4);
+  }
+  79% {
+    transform: scale(1.1, 0.88);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1);
+  }
+  85% {
+    transform: translateY(-6px) scale(0.98, 1.03);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.4);
+  }
+  90% {
+    transform: scale(1.04, 0.96);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
+  }
+  95%,
   100% {
-    transform: translateY(0);
-  }
-  88% {
-    transform: translateY(-7px);
-  }
-  94% {
-    transform: translateY(0);
+    transform: none;
   }
 }
 
@@ -101,11 +181,12 @@ html {
   }
 }
 
-/* Silver status text. Base is a flat silver so reduced-motion users (and the
+/* Status text. Same warm temperature as the text ramp (it used to be a
+   cool blue-grey silver, the only cool colour on the site). Base is flat so reduced-motion users (and the
    brief moment before the animation kicks in) still read clean silver; the
    animated gradient shine is layered on in the no-preference block below. */
 .shimmer-text {
-  color: #c9c9ce;
+  color: #cfccc4;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -176,20 +257,26 @@ html {
     animation: breathe 2.4s var(--ease-in-out) infinite;
   }
 
-  /* 5 — avatar idle nudge (roughly once every ~5.5s) */
-  .avatar-nudge {
-    animation: avatar-nudge 5.5s var(--ease-out) infinite;
+  /* 5 — avatar "tap me" bounce, about once every 3s. The component drops this
+     class after the visitor first engages (see profile-socials.tsx); it also
+     holds still while hovered so it doesn't fight the hover tilt. */
+  .avatar-bounce {
+    transform-origin: 50% 100%;
+    animation: avatar-bounce 3s linear 1.2s infinite;
+  }
+  .avatar-bounce:hover {
+    animation-play-state: paused;
   }
 
   /* 6 — status text: iOS slide-to-unlock silver shimmer */
   .shimmer-text {
     background: linear-gradient(
       100deg,
-      #6b6b70 0%,
-      #6b6b70 42%,
-      #f4f4f7 50%,
-      #6b6b70 58%,
-      #6b6b70 100%
+      #75736c 0%,
+      #75736c 42%,
+      var(--color-cream) 50%,
+      #75736c 58%,
+      #75736c 100%
     );
     background-size: 200% 100%;
     -webkit-background-clip: text;

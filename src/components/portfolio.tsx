@@ -46,17 +46,26 @@ function thumbClasses(variant: ThumbVariant) {
 // grid and the detail pages fed from the same data.
 export type Work = Project;
 
+// Sets the --tint custom property that `.card-tint` (globals.css) reads.
+function tintStyle(tint?: string) {
+  return tint ? ({ "--tint": tint } as React.CSSProperties) : undefined;
+}
+
 export function WorkCard({
   work,
   blurDataURL,
+  tint,
 }: {
   work: Work;
   blurDataURL?: string;
+  /** "r g b" — the project's own colour, for the hover glow. */
+  tint?: string;
 }) {
   return (
     <Link
       href={`/work/${work.slug}`}
-      className="group card-press block rounded-[22px] hover:bg-surface-hover md:p-3"
+      style={tintStyle(tint)}
+      className="group card-press card-tint block rounded-[22px] hover:bg-surface-hover md:p-3"
     >
       <div className="relative aspect-[543/475] w-full overflow-hidden rounded-t-[20px]">
         <AdaptiveImage
@@ -104,6 +113,8 @@ export type ListItem = {
   title: string;
   subtitle: string;
   href?: string;
+  /** "r g b" — the thumbnail's own colour, for the hover glow. */
+  tint?: string;
 };
 
 export function ListRow({
@@ -120,7 +131,8 @@ export function ListRow({
     <a
       href={item.href ?? "#"}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
-      className="group card-press relative flex w-full items-center gap-3 rounded-[20px] hover:bg-surface-hover md:p-3"
+      style={tintStyle(item.tint)}
+      className="group card-press card-tint relative flex w-full items-center gap-3 rounded-[20px] hover:bg-surface-hover md:p-3"
     >
       <div
         className={`${thumbSize} relative shrink-0 overflow-hidden rounded-l-[16px] ${thumbClasses(

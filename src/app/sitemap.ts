@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/config/site";
 import { PROJECTS } from "@/data/projects";
+import { PUBLICATIONS } from "@/data/publications";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -21,5 +22,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...projectPages,
+    ...PUBLICATIONS.map((p) => ({
+      url: `${SITE_URL}${p.href}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    // Standalone static pages in /public, served at clean URLs via rewrites.
+    ...["/bookshelf", "/life-away"].map((path) => ({
+      url: `${SITE_URL}${path}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
   ];
 }

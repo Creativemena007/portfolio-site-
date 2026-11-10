@@ -4,7 +4,7 @@ Living doc for this repo. Claude Code loads it automatically at the start of eve
 session, so it's the fastest way to know what this project is, how it's built, and
 what we've changed. **Keep the Changelog at the bottom updated as we work.**
 
-Last updated: 2026-07-23
+Last updated: 2026-11-10
 
 ---
 
@@ -15,11 +15,12 @@ climate, blockchain). Deployed to Vercel. Production domain: `https://thecreativ
 
 ## Stack
 
-- **Next.js 16.2.10** (App Router) + **React 19.2.4** + **TypeScript 5**
+- **Next.js 16.4.6** (App Router) + **React 19.2.4** + **TypeScript 5**
 - **Tailwind CSS v4** (via `@tailwindcss/postcss`) — most styling actually lives in
   hand-written CSS in `src/app/globals.css`, not utility classes
 - **@vercel/analytics** for page analytics
 - **agentation** — dev-only annotation toolbar (must never render in production)
+- **motion** — gesture/spring library, used only by the publication's screenshot viewer
 - Font: **Neue Haas Grotesk Display Pro**, self-hosted from `src/app/fonts/` via
   `next/font/local` (see `layout.tsx`)
 
@@ -30,10 +31,12 @@ Scripts: `npm run dev` · `npm run build` · `npm run start` · `npm run lint`
 ```
 src/
   app/
-    layout.tsx          Root layout: fonts, metadata/SEO, Analytics, Agentation
+    layout.tsx          Root layout: fonts, metadata/SEO, Analytics, DevToolbar
+    not-found.tsx       Custom 404
     template.tsx        Route-level opacity crossfade on navigation
     page.tsx            Home page (work grid + personal/writing lists)
     work/[slug]/page.tsx  Case-study detail pages (SSG from PROJECTS)
+    publications/<slug>/  Long-form publications (hand-built page per piece)
     opengraph-image.tsx   Dynamic OG image ("M" monogram)
     robots.ts, sitemap.ts SEO, both read SITE_URL
     icon.png, apple-icon.png  Favicons
@@ -43,10 +46,14 @@ src/
     portfolio.tsx       WorkCard, ListItem, ListRow, SectionLabel (home page pieces)
     reveal.tsx          Scroll-reveal wrapper (.reveal / .reveal-stagger in CSS)
     escape-home.tsx     Esc-to-home key handler on project pages
+    site-footer.tsx     Shared footer (home + case studies)
+    dev-toolbar.tsx     Dev-only Agentation loader (dynamic import)
+    adaptive-image.tsx  next/image wrapper, lower quality on slow connections
   config/
     site.ts             Single source of truth for SEO/identity (SITE_URL, titles…)
   data/
     projects.ts         The four case studies — read by home grid AND detail pages
+    publications.ts     Publications list — home section, sitemap, page metadata
 public/
   bookshelf.html        Standalone static page — "The shelf" (books)
   life-away.html        Standalone static page — photo gallery
@@ -81,6 +88,122 @@ public/
 ---
 
 ## Changelog — what we've done
+
+### 2026-11-10
+- **Colour system: one text ramp.** The section labels (`--color-label`,
+  `#726f64`) were an olive grey sitting between two neutral greys, and failed
+  contrast (3.8:1). All text greys now share the cream's faint warmth and
+  pass AA: `muted #a8a69f` (body), `muted-2 #918f88` (secondary/captions),
+  `label #807e77` (uppercase labels). Roles and contrast figures are
+  documented beside the tokens in `globals.css` — pick by role, don't add a
+  sixth grey. The shimmer status text moved from a cool silver to the same
+  warm family; unused `--color-italic` removed. Token names are unchanged.
+  *Not done:* hairlines and surfaces still use ad-hoc `white/5`, `white/10`
+  values rather than tokens; the standalone HTML pages keep their own colours.
+- **Delight pass (gestures + colour).** Reviewed with the gestures skill.
+  - **Accent colour now has a job.** The orange `--color-accent` was defined
+    but unused. It is reserved for "live" signals only: the status dot, the
+    publication's reading-progress line, `::selection`, and `:focus-visible`
+    rings (global rule in `globals.css`). Don't use it decoratively.
+  - **Card tint.** Home cards/rows glow in their own image's colour on hover
+    (`.card-tint` + `--tint: "r g b"`). The colour is read at build time by
+    `vividColour()` in `src/lib/image-size.ts` (saturation-weighted average —
+    sharp's "dominant" returns near-black for dark product shots). Override
+    with `tint` in `projects.ts` / `publications.ts` when the photo misleads
+    (Jito's hands read salmon; the publication thumb is too dark).
+  - **Pull the avatar** (`profile-socials.tsx`): drag right to bring the
+    socials out, left to tuck them away; rubber-band tracking written straight
+    to `transform`, springs home on release. Hand-rolled Pointer Events so the
+    home page does not load an animation library. The bounce moved to an
+    inner wrapper so it can't fight the drag transform.
+  - **Publication:** `compare.tsx` (drag-to-compare before/after, keyboard
+    slider, one-time hint sway), `lightbox.tsx` (tap a screenshot → full-size
+    viewer; swipe sideways for next/previous, swipe down to dismiss, backdrop
+    opacity derived from the drag), `clip.tsx` (tap to pause/resume),
+    `page-effects.tsx` (current section in the sticky bar; cursor parallax on
+    the opening phones, mouse-only).
+  - **New dependency: `motion`** — used only by the lightbox, so it is only
+    in the publication route's bundle. Keep it out of the home page.
+  - *Gotcha:* the lightbox stops Esc in the capture phase because
+    `EscapeHome` would otherwise navigate home while the viewer is open.
+- **Publications.** New home-page section (under My Work) fed by
+  `src/data/publications.ts`, and the first piece at
+  `/publications/echo-to-council` ("Echo chamber → Council and Debate", Zo).
+  - Ported from a standalone HTML piece (Geist, violet theme, 2.4MB with 25
+    base64 screenshots) into a real route in the portfolio style.
+  - `content.tsx` is the body, machine-converted once from the original HTML
+    and now **hand-maintained** — edit copy there. It keeps the original
+    class names (`.gap`, `.shift`, `.pair`, `.tn` …); `publication.css`
+    restyles all of them, scoped under `.pub`. The three SVG diagrams read CSS
+    variables (`--accent`, `--dim`, `--line` …) that `.pub` remaps to the
+    cream/near-black palette, so they recolour without touching the SVGs.
+  - Media: screenshots in `public/images/publications/echo-to-council/`
+    (`<Shot>`, next/image); six recordings + posters in
+    `public/videos/publications/echo-to-council/` (`<Clip>`: `preload="none"`,
+    plays only while on screen, controls instead of autoplay under reduced
+    motion).
+  - `reveal-all.tsx` flips `data-visible` on every `.pub .reveal` block, reusing
+    the global `.reveal` CSS instead of wrapping each block in `<Reveal>`.
+  - **Editorial layout** (reviewed against the Emil Kowalski and Apple design
+    skills). Title is now "The Idea Was Right. The Technology Wasn't Ready."
+    with a narrative lede. Rules live at the top of `publication.css`:
+    centre is only for glance moments (masthead, opening spread, pull quote,
+    stats, captions under images); section openers, intros and all running
+    text share one left edge on the text measure; text sits
+    on a 680px measure and media steps out to 880/1000/1080; phones carry one
+    shared shadow and the older screen is pushed back behind the new one (hero
+    spread, before/after pairs, which alternate sides); one spacing scale
+    (`--s-*`, section gap 176px desktop / 112px phone). Screenshot rows wrap
+    into a centred gallery on desktop and become a swipe rail on phones.
+    Masthead has a byline (name · date · reading time) and the sticky bar has
+    a CSS-only reading-progress hairline (`.pub-progress`, scroll-driven
+    animation, hidden where unsupported).
+    *Gotcha:* inside `.pub`, set `margin-block` (not the `margin` shorthand)
+    on text elements — the measure rules centre section children with
+    `margin-inline: auto`, and a later shorthand silently un-centres them.
+  - To add another publication: new folder under `src/app/publications/`, add
+    an entry to `publications.ts` (home list + sitemap pick it up).
+- **Review + cleanup pass before new work.** Lint, type check and build all clean
+  (0 lint warnings, `npm audit --omit=dev` = 0).
+  - **Agentation no longer ships to production.** The static
+    `import { Agentation }` in `layout.tsx` put the whole library (~427KB) in a
+    chunk every live page downloaded, even though the `NODE_ENV` check stopped it
+    rendering. Now loaded via `next/dynamic` inside
+    `src/components/dev-toolbar.tsx`, so it is its own chunk that is only fetched
+    in development. *Rule:* never statically import a dev-only library from a
+    server component; gate the import, not just the render.
+  - **Next 16.2.10 → 16.4.6** (+ `eslint-config-next`), then `npm audit fix`.
+    Remaining advisories are dev-only (eslint toolchain `minimatch`).
+  - **Avatar is a tap toggle for the socials** (`src/components/profile-socials.tsx`,
+    client component). They were hover/focus-only, so touch visitors never saw
+    them. Now: hover reveals on mouse, tap/click on the avatar toggles them,
+    keyboard focus (`focus-visible`) reveals them. Don't switch back to
+    `focus-within` — a tap focuses the button, which would stop it closing.
+  - **Headline words are links** (`page.tsx`, `HEADLINE_LINK`): "Designer" →
+    `#work` (the My Work section, same page), "author" → the book on Amazon,
+    "curious human" → Instagram (both new tab). Thin dim underline at rest.
+  - **Avatar "tap me" bounce** (`.avatar-bounce` in `globals.css`): game-style
+    squash-and-stretch hop about every 3s, replacing the old `avatar-nudge`. It
+    stops permanently once the visitor hovers or taps the avatar.
+  - **Static pages are now shareable/indexable.** `bookshelf.html` and
+    `life-away.html` got description, canonical, `og:*` and `twitter:*` tags
+    (hardcoded to the `www` host — update by hand if the domain changes) and are
+    listed in `sitemap.ts`.
+  - **AdaptiveImage no longer double-downloads.** If the image already finished
+    loading at full quality before the effect runs, it stays; it only drops to
+    q40 for images not yet fetched.
+  - **Shared footer** in `src/components/site-footer.tsx` (year from build time);
+    **custom 404** in `src/app/not-found.tsx`.
+  - **Tidy:** removed create-next-app SVGs, three unused icons, the unused
+    `contain` block option; `arc/overview.png` was byte-identical to
+    `work-arc.png`, so the case study now points at the latter; `zo/hero.jpg`
+    recompressed 2.6MB → 451KB (2000px wide); README rewritten; package renamed
+    `portfolio`.
+  - **Git account:** this repo's local git config uses the GitHub CLI login
+    (`Creativemena007`) for github.com — the machine default (`Menaisworking`)
+    has no write access.
+  - **Dev server:** port 3000 is often taken by another project; `.claude/launch.json`
+    runs this one on **3100**.
 
 ### 2026-07-24
 - **Bandwidth-gated image rendition (landing page).** Added

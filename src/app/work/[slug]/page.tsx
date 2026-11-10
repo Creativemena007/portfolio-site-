@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/reveal";
 import { EscapeHome } from "@/components/escape-home";
+import { SiteFooter } from "@/components/site-footer";
 import {
   PROJECTS,
   getNextProject,
@@ -304,36 +305,7 @@ export default async function ProjectPage({
           </div>
         )}
 
-        {/* Footer */}
-        <footer className="mt-24 flex flex-col gap-5 text-[16px] tracking-normal sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-medium text-cream">&copy; 2026 Thecreativemena</p>
-          <nav className="flex items-center gap-[30px] text-muted-2">
-            <a
-              href="https://github.com/user-attachments/files/24366703/MENA.CV.2026.pdf"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-cream"
-            >
-              Resume
-            </a>
-            <a
-              href="https://www.linkedin.com/in/thecreativemena/"
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-cream"
-            >
-              Linkedin
-            </a>
-            <a
-              href="https://x.com/Thecreativemena"
-              target="_blank"
-              rel="noreferrer"
-              className="transition-colors hover:text-cream"
-            >
-              Twitter (X)
-            </a>
-          </nav>
-        </footer>
+        <SiteFooter />
       </div>
     </main>
   );

@@ -40,7 +40,7 @@ export default function OpengraphImage() {
             display: "flex",
             fontSize: 26,
             letterSpacing: 2,
-            color: "#726f64",
+            color: "#807e77",
           }}
         >
           thecreativemena.com

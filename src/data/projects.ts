@@ -15,7 +15,7 @@ export type ProjectBlock =
   | { type: "text"; body: string }
   | { type: "list"; ordered?: boolean; items: string[] }
   // light: render on a white panel (for transparent PNGs with dark text).
-  | { type: "image"; src: string; alt?: string; contain?: boolean; light?: boolean };
+  | { type: "image"; src: string; alt?: string; light?: boolean };
 
 export type MetaRow = { label: string; value: string };
 
@@ -28,6 +28,10 @@ export type Project = {
   /** Optional longer H1 for the detail page (falls back to `title`). */
   headline?: string;
   category: string;
+  /** Optional "r g b" hover-glow colour for the home card. Leave unset to use
+      the colour read from the thumbnail at build time; set it when the photo
+      (hands, props) drowns out the brand colour. */
+  tint?: string;
   description: string;
   /** External "Visit link" URL shown in the detail header. */
   visitUrl?: string;
@@ -44,6 +48,8 @@ export const PROJECTS: Project[] = [
     img: "work-jito",
     title: "Jito",
     category: "BLOCKCHAIN",
+    // Jito green — the thumbnail's hands would otherwise read as salmon.
+    tint: "95 211 160",
     description:
       "Jito Foundation (Network) is an MEV infrastructure company that develops systems to scale Solana and maximize validator rewards. Users can deposit SOL to earn JitoSOL. The Jito Stake Pool delegates SOL to MEV-enabled validators who auction blockspace and earn MEV rewards. These rewards boost the stake pool’s APY, and users holding JitoSOL also benefit from MEV rewards, enhancing their overall returns alongside staking rewards. This setup allows users to maximize their earnings through staking and MEV opportunities on the Solana network.",
     visitUrl: "https://www.jito.network",
@@ -1373,7 +1379,7 @@ export const PROJECTS: Project[] = [
     content: [
       {
         type: "image",
-        src: "/images/arc/overview.png",
+        src: "/images/work-arc.png",
         alt: "Arc — the aggregated crypto market dashboard",
       },
 
