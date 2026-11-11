@@ -4,7 +4,7 @@ Living doc for this repo. Claude Code loads it automatically at the start of eve
 session, so it's the fastest way to know what this project is, how it's built, and
 what we've changed. **Keep the Changelog at the bottom updated as we work.**
 
-Last updated: 2026-11-10
+Last updated: 2026-11-11
 
 ---
 
@@ -89,6 +89,13 @@ public/
 ---
 
 ## Changelog — what we've done
+
+### 2026-11-11
+- **Home list rows on phones.** Every `ListRow` uses the same 78×73 thumbnail
+  below `md` (the `lg` size only applies from tablet up), and row text is
+  clamped so it never stands taller than the thumbnail: title one line,
+  subtitle one line (two on desktop `lg` rows). Long titles end in an
+  ellipsis on phones — if one reads badly, shorten its text in the data.
 
 ### 2026-11-10
 - **Audit fixes (motion + design).**

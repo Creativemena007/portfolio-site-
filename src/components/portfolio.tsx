@@ -124,8 +124,13 @@ export function ListRow({
   item: ListItem;
   size?: "sm" | "lg";
 }) {
+  // On phones every row uses the same thumbnail, so stacked sections line
+  // up; the larger "lg" thumbnail only applies from tablet width up, where
+  // those rows sit in a single wide column.
   const thumbSize =
-    size === "lg" ? "h-[95px] w-[104px]" : "h-[73px] w-[78px]";
+    size === "lg"
+      ? "h-[73px] w-[78px] md:h-[95px] md:w-[104px]"
+      : "h-[73px] w-[78px]";
   const external = item.href?.startsWith("http");
   return (
     <a
@@ -154,10 +159,17 @@ export function ListRow({
         )}
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-1.5 transition-transform duration-300 ease-out group-hover:translate-x-1.5">
-        <span className="text-[16px] font-medium tracking-[-0.01em] text-cream">
+        {/* The text never stands taller than the thumbnail beside it: the
+            title is one line, and the subtitle is one line too (two on the
+            larger desktop rows). Anything longer ends in an ellipsis. */}
+        <span className="truncate text-[16px] font-medium tracking-[-0.01em] text-cream">
           {item.title}
         </span>
-        <span className="text-[16px] tracking-normal text-muted-2">
+        <span
+          className={`text-[16px] tracking-normal text-muted-2 ${
+            size === "lg" ? "line-clamp-1 md:line-clamp-2" : "line-clamp-1"
+          }`}
+        >
           {item.subtitle}
         </span>
       </div>
