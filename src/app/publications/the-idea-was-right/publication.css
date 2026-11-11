@@ -1127,3 +1127,10 @@
     -webkit-backdrop-filter: none;
   }
 }
+
+/* End mark: a single spark closing the piece (also a Side Quest find). */
+.pub .pub-endmark {
+  display: flex;
+  justify-content: center;
+  margin-block: var(--s-section) 0;
+}

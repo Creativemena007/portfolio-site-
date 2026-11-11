@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { EscapeHome } from "@/components/escape-home";
+import { QuestItem } from "@/components/quest";
 import { CurrentSection, RevealAll } from "@/components/reading";
 import { SiteFooter } from "@/components/site-footer";
 import {
@@ -370,6 +371,11 @@ export default async function ProjectPage({
             <span className="cs-more-title">{next.title}</span>
           </Link>
         </nav>
+
+        {/* End mark. Reading to the end finds one of the Side Quest items. */}
+        <div className="cs-endmark">
+          <QuestItem id="ending" />
+        </div>
       </article>
 
       {/* The shared footer sits outside `.cs` so the case-study text styles

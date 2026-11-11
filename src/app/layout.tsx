@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { DevToolbar } from "@/components/dev-toolbar";
+import { QuestHud } from "@/components/quest";
 import "./globals.css";
 import {
   SITE_DESCRIPTION,
@@ -98,6 +99,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full antialiased">
         {children}
+        <QuestHud />
         <Analytics />
         {process.env.NODE_ENV === "development" && <DevToolbar />}
       </body>

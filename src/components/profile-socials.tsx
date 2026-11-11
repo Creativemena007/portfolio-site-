@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { collectQuest } from "@/components/quest";
 
 /*
   Avatar + social links.
@@ -138,7 +139,11 @@ export function ProfileSocials() {
       : "transform 520ms cubic-bezier(0.34, 1.45, 0.5, 1)";
     e.currentTarget.style.transform = "";
     if (!d.moved) return; // a plain tap — onClick toggles
-    if (d.dx > OPEN_DISTANCE || d.velocity > FLICK_VELOCITY) setOpen(true);
+    if (d.dx > OPEN_DISTANCE || d.velocity > FLICK_VELOCITY) {
+      setOpen(true);
+      // Side Quest: pulling the avatar out is one of the hidden finds.
+      collectQuest("pull");
+    }
     else if (d.dx < -CLOSE_DISTANCE || d.velocity < -FLICK_VELOCITY)
       setOpen(false);
   }

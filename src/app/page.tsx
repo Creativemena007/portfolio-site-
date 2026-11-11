@@ -6,6 +6,7 @@ import {
   WorkCard,
 } from "@/components/portfolio";
 import { ProfileSocials } from "@/components/profile-socials";
+import { QuestItem } from "@/components/quest";
 import { Reveal } from "@/components/reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { PROJECTS } from "@/data/projects";
@@ -297,7 +298,11 @@ export default async function Home() {
 
             {/* SIDE QUEST */}
             <section className="flex flex-col gap-5">
-              <SectionLabel>Side Quest</SectionLabel>
+              {/* The first collectible hides beside the section it's named after. */}
+              <div className="flex items-center gap-2">
+                <SectionLabel>Side Quest</SectionLabel>
+                <QuestItem id="spark" />
+              </div>
               <Reveal stagger className="flex flex-col gap-[18px]">
                 {SIDE_QUEST.map((item) => (
                   <ListRow key={item.title} item={withTint(item)} size="lg" />

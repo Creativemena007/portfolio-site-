@@ -91,6 +91,26 @@ public/
 ## Changelog — what we've done
 
 ### 2026-11-11
+- **Side Quest (play layer).** Seven collectibles hidden across the site,
+  all drawn as the same small four-point spark so one find teaches the rest:
+  beside the home "Side Quest" label (`spark`), dragging the avatar out
+  (`pull`), the end mark under every case study (`ending`), the end mark of
+  the publication (`echo`), the 404 page (`lost`), the bookshelf hint line
+  (`shelf`) and the life-away footnote (`run`).
+  - Data + storage: `src/lib/quest.ts` (localStorage key `mena:side-quest`;
+    nothing leaves the browser). UI: `src/components/quest.tsx`
+    (`QuestItem`, `QuestHud`, `useQuest`). Styles: `.quest-*` in
+    `globals.css`. The static pages use `public/quest.js`, which shares the
+    key — **keep its NAMES/TOTAL in step with `QUEST`**.
+  - The counter (`QuestHud`, bottom-left, mounted in `layout.tsx`) doesn't
+    exist until the first find, briefly names each find, and links to
+    `/journal` (noindex): found stories, hints for the rest, and an unlock
+    card with a "Write to me" email link when all seven are found.
+  - Sparks are 16px cream with a soft glow (first version was too hidden).
+    An unfound spark twinkles once when it first comes fully into view; no
+    loops, no sound; twinkle/pop only under no-preference motion.
+  - *Needs the owner:* every story and the unlock note are drafts written
+    from the site's own content — rewrite them in his voice.
 - **Publication stats left-aligned.** The four research figures (`.findings`)
   and the caveat under them now sit on a left edge instead of centred; stats
   are no longer one of the publication's "centred glance moments".

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { QuestItem } from "@/components/quest";
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -22,6 +23,11 @@ export default function NotFound() {
         >
           Go back home
         </Link>
+        {/* Side Quest: getting lost is one of the finds. */}
+        <div className="enter enter-d4 mt-10 flex items-center gap-3 text-[14px] text-muted-2">
+          <QuestItem id="lost" />
+          <span>Since you made it this far, take this with you.</span>
+        </div>
       </div>
     </main>
   );

@@ -8,6 +8,7 @@ import { PUBLICATIONS } from "@/data/publications";
 
 import { Content } from "./content";
 import { Lightbox } from "./lightbox";
+import { QuestItem } from "@/components/quest";
 import { HeroParallax } from "./page-effects";
 import "./publication.css";
 
@@ -82,6 +83,10 @@ export default function PublicationPage() {
         className="pub relative z-10 px-5 pt-[52px] md:px-6 md:pt-16"
       >
         <Content />
+        {/* The end mark doubles as a Side Quest find. */}
+        <div className="pub-endmark">
+          <QuestItem id="echo" />
+        </div>
         <div className="col">
           <p className="pub-note">
             Zo · Council and Debate · 2026. Sample names and messages are
