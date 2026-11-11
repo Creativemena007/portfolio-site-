@@ -7,7 +7,7 @@
 
   Layout rules, in one place:
   - Centre is for the moments you glance at: the masthead, the opening
-    spread, the pull quote, the stats and captions under an image. Everything
+    spread, the pull quote and captions under an image. Everything
     you read (section openers, intros, body, cards, tables, lists) keeps one
     steady left edge on the text measure.
   - One measure: 680px for text. Media steps out to wider measures
@@ -607,12 +607,14 @@
   color: var(--color-cream-dim);
 }
 
-/* ---- Research findings: four centred figures -------------------------- */
+/* ---- Research findings: four figures, each on its own left edge --------
+   Left-aligned so the number and its explanation share one edge; the eye
+   drops straight from the figure into the sentence about it. */
 .pub .findings {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
   gap: var(--s-5) var(--s-4);
-  text-align: center;
+  text-align: left;
 }
 .pub .finding {
   padding-top: var(--s-4);
@@ -627,8 +629,8 @@
   color: var(--color-cream);
 }
 .pub .finding p {
-  max-width: 230px;
-  margin: var(--s-3) auto 0;
+  max-width: 260px;
+  margin: var(--s-3) 0 0;
   font-size: 14px;
   line-height: 1.55;
   color: var(--color-muted-2);
@@ -637,8 +639,8 @@
   margin-top: var(--s-5);
   font-size: 14px;
   font-style: italic;
-  text-align: center;
-  text-wrap: balance;
+  text-align: left;
+  text-wrap: pretty;
   color: var(--color-muted-2);
 }
 

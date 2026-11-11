@@ -91,6 +91,9 @@ public/
 ## Changelog — what we've done
 
 ### 2026-11-11
+- **Publication stats left-aligned.** The four research figures (`.findings`)
+  and the caveat under them now sit on a left edge instead of centred; stats
+  are no longer one of the publication's "centred glance moments".
 - **Home list rows on phones.** Every `ListRow` uses the same 78×73 thumbnail
   below `md` (the `lg` size only applies from tablet up), and row text is
   clamped so it never stands taller than the thumbnail: title one line,
