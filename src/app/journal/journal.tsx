@@ -48,7 +48,7 @@ export function Journal() {
       </header>
 
       {complete && (
-        <section className="journal-unlock enter enter-d3 flex flex-col gap-4 rounded-[20px] border border-white/10 bg-surface p-6 md:p-8">
+        <section className="journal-unlock enter enter-d3 flex flex-col gap-4 rounded-[20px] border border-rule bg-surface p-6 md:p-8">
           <p className="flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.18em] text-cream-dim">
             <span className="size-[8px] rounded-full bg-accent shadow-[0_0_10px_rgb(245_132_4/0.6)]" />
             Unlocked
@@ -66,13 +66,13 @@ export function Journal() {
         </section>
       )}
 
-      <ol className="enter enter-d3 flex flex-col">
+      <ol className="journal-list flex flex-col">
         {QUEST.map((q, i) => {
           const has = found.includes(q.id);
           return (
             <li
               key={q.id}
-              className="grid grid-cols-[28px_1fr] gap-x-4 gap-y-2 border-t border-white/[0.07] py-6"
+              className="grid grid-cols-[28px_1fr] gap-x-4 gap-y-2 border-t border-hairline py-6"
             >
               <span className="pt-[3px] text-[13px] tabular-nums text-label">
                 {String(i + 1).padStart(2, "0")}

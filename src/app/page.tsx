@@ -21,7 +21,7 @@ const PERSONAL: ListItem[] = [
     variant: "cover",
     title: "In Real Life",
     subtitle: "Good things happen together.",
-    href: "https://beta.plans.entertheplayground.co/p/the-gathering-for-men-of-jkm-2bib",
+    href: "https://beta.plans.entertheplayground.co/",
   },
   {
     img: "ontime",

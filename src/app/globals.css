@@ -15,6 +15,15 @@
      `white/10`, which reads cold and too strong against the cream palette). */
   --color-surface-hover: rgb(253 252 248 / 0.045);
 
+  /* Lines — the same warm white as the text, at three strengths. Pick by
+     role (like the greys); don't reach for raw `white/5`, `white/10`.
+       hairline     bars and list dividers you shouldn't notice
+       rule         card borders, section rules, the HUD outline
+       rule-strong  hover / emphasis on a rule */
+  --color-hairline: rgb(253 252 248 / 0.06);
+  --color-rule: rgb(253 252 248 / 0.1);
+  --color-rule-strong: rgb(253 252 248 / 0.15);
+
   /* Text — one ramp, one temperature.
      Every step is the same faintly warm grey as the cream at the top, just
      darker, so no step reads as a different colour (the old label was an
@@ -354,7 +363,7 @@ body {
   --m-full: 1080px;
   --s-block: 64px;
   --s-section: 104px;
-  --line: rgb(255 255 255 / 0.1);
+  --line: var(--color-rule);
 
   color: var(--color-muted);
   font-size: 16px;
@@ -706,7 +715,7 @@ body {
   height: 36px;
   padding: 0 14px;
   border-radius: 999px;
-  border: 1px solid rgb(255 255 255 / 0.08);
+  border: 1px solid var(--color-rule);
   background: rgb(28 27 24 / 0.82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -749,7 +758,7 @@ body {
 @media (hover: hover) and (pointer: fine) {
   .quest-hud:hover {
     color: var(--color-cream);
-    border-color: rgb(255 255 255 / 0.16);
+    border-color: var(--color-rule-strong);
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -805,4 +814,32 @@ body {
   display: flex;
   justify-content: center;
   margin-top: 72px;
+}
+
+/* Journal entries arrive in a short stagger (a rare, rewarding page). */
+@media (prefers-reduced-motion: no-preference) {
+  .journal-list > li {
+    animation: enter-up 400ms var(--ease-out) both;
+  }
+  .journal-list > li:nth-child(1) {
+    animation-delay: 240ms;
+  }
+  .journal-list > li:nth-child(2) {
+    animation-delay: 280ms;
+  }
+  .journal-list > li:nth-child(3) {
+    animation-delay: 320ms;
+  }
+  .journal-list > li:nth-child(4) {
+    animation-delay: 360ms;
+  }
+  .journal-list > li:nth-child(5) {
+    animation-delay: 400ms;
+  }
+  .journal-list > li:nth-child(6) {
+    animation-delay: 440ms;
+  }
+  .journal-list > li:nth-child(7) {
+    animation-delay: 480ms;
+  }
 }

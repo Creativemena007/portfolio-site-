@@ -64,7 +64,7 @@ export default function PublicationPage() {
       <Lightbox scope=".pub" />
 
       {/* Same pinned bar as the case-study pages. Esc also returns home. */}
-      <div className="sticky top-0 z-20 border-b border-white/5 bg-bg/70 backdrop-blur-md">
+      <div className="sticky top-0 z-20 border-b border-hairline bg-bg/70 backdrop-blur-md">
         <nav className="mx-auto flex w-full max-w-[720px] items-center justify-between gap-6 px-5 py-4 text-[12px] font-medium uppercase tracking-[0.18em] text-label md:px-6">
           <Link
             href="/"

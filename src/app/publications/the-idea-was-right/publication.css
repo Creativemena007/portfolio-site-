@@ -28,7 +28,7 @@
   --bg: var(--color-bg);
   --surface: var(--color-surface);
   --raised: #24221f;
-  --line: rgb(255 255 255 / 0.1);
+  --line: var(--color-rule);
   --fg: var(--color-cream);
   --muted: var(--color-muted);
   --dim: var(--color-muted-2);

@@ -45,3 +45,6 @@ next-env.d.ts
 /.agents
 /plans
 /skills-lock.json
+
+# LinkedIn post assets (rendered videos, not part of the site)
+/linkedin

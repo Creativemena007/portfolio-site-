@@ -91,6 +91,32 @@ public/
 ## Changelog — what we've done
 
 ### 2026-11-11
+- **Bookshelf UX pass** (`public/bookshelf.html`, from an Emil-style audit).
+  - Open is ~1.1s (fly 550ms, cover starts swinging at 380ms) and put-back
+    ~0.45s with the cover closing *while* the book flies home.
+  - Inside the cover: a library pocket + checkout card ("Mena's copy", No.,
+    title, author, shelved/genre, published/year, "Due back: Never", a
+    "Kept" stamp). Genre/year moved there from the bottom of the page.
+  - Browse while open: ← → keys swap instantly; previous/next buttons and a
+    sideways swipe (touch only) slide 40px in the direction of travel.
+  - Phones: the cover flips up over the top edge (notepad), the stacked
+    spread is scaled to fit between the top bar and the browse buttons
+    (`openedTransform()`).
+  - Shelf is only as wide as the books + two bookends, contact shadows under
+    each book, 1.12× on ≥1000px screens. Hint says "Tap" on touch screens and
+    fades after the first book is opened (the quest spark stays).
+  - Reduced motion keeps fades, drops the flying/swinging.
+  - Covers for Naval and The Alchemist are saved in `public/images/books/`
+    (`coverSrc`); Open Library has no cover for Build, so it keeps the
+    typographic cover. Nothing loads from Open Library any more.
+- **Polish pass.** Line colours are tokens now (`--color-hairline` 0.06,
+  `--color-rule` 0.1, `--color-rule-strong` 0.15, warm white) — use
+  `border-hairline` / `border-rule`, not raw `white/5`, `white/10`. Avatar
+  drag no longer selects the headline text. The Journal's back link matches
+  the other pages and its entries arrive in a 40ms stagger. The life-away
+  footnote sits on a soft dark pill so it reads over photos.
+- **In Real Life** now links to `https://beta.plans.entertheplayground.co/`
+  (was a single dated event page).
 - **Side Quest (play layer).** Seven collectibles hidden across the site,
   all drawn as the same small four-point spark so one find teaches the rest:
   beside the home "Side Quest" label (`spark`), dragging the avatar out

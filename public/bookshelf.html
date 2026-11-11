@@ -88,18 +88,50 @@
   /* ---------- shelf ---------- */
   .shelf-wrap{
     max-width:1060px;margin:0 auto;
-    padding:64px 32px 120px;
+    padding:40px 32px 120px;
   }
+  /* The shelf is as wide as its books plus a pair of bookends, so the
+     collection reads as curated rather than lost on a long plank. */
   .shelf{
     display:flex;
     align-items:flex-end;
     justify-content:center;
-    min-height:340px;
+    width:fit-content;
+    margin:0 auto;
+    padding:0 40px;
+    min-height:310px;
     position:relative;
+  }
+  @media (min-width:1000px){
+    /* Books are the content: a little bigger on wide screens. */
+    .shelf{transform:scale(1.12);transform-origin:bottom center}
+  }
+  .bookend{
+    flex:0 0 auto;
+    width:9px;height:132px;
+    margin:0 6px;
+    background:linear-gradient(90deg,#3b3a35,#2c2b27);
+    border-radius:2px 2px 0 0;
+    box-shadow:inset 1px 0 0 rgba(255,255,255,.08), 0 0 0 rgba(0,0,0,0);
+    position:relative;
+  }
+  .bookend::after{
+    content:"";position:absolute;bottom:0;height:5px;width:34px;
+    background:#2c2b27;border-radius:1px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    z-index:-1;   /* the foot slides under the books */
+  }
+  .bookend.start::after{left:0}
+  .bookend.end::after{right:0}
+  /* Contact shadow where each book meets the plank. */
+  .book::after{
+    content:"";position:absolute;left:1px;right:1px;bottom:-2px;height:4px;
+    background:rgba(0,0,0,.55);filter:blur(2px);z-index:1;
+    pointer-events:none;
   }
   .shelf::after{
     content:"";
-    position:absolute;left:-4%;right:-4%;bottom:-14px;height:14px;
+    position:absolute;left:0;right:0;bottom:-14px;height:14px;
     /* a lit top lip + deeper ambient shadow so the ledge reads as a real
        physical shelf against the dark wall (§12 depth) */
     background:linear-gradient(var(--shelf), #201f1c);
@@ -186,7 +218,7 @@
   .t-berger .title{font-family:'Archivo';font-stretch:125%;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
 
   .hint{
-    text-align:center;margin-top:64px;
+    text-align:center;margin-top:52px;
     font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
   }
 
@@ -510,9 +542,18 @@
     pointer-events:auto;
     will-change:transform;
   }
+  /* Open ~1.1s in all (fly 550ms, cover starts swinging before it lands);
+     put back ~0.5s: leaving is quicker than arriving. */
   .book3d.moving{
-    transition:transform .75s cubic-bezier(.25,.85,.25,1);
+    transition:transform .55s cubic-bezier(.25,.85,.25,1);
   }
+  .book3d.moving.closing{
+    transition-duration:.42s;
+    transition-timing-function:cubic-bezier(.77,0,.175,1);
+  }
+  .book3d.closing .coverFlap{transition-duration:.3s}
+  /* Swapping to the previous/next book while open. */
+  .book3d .faces-swap{transition:opacity .16s ease, transform .16s ease}
 
   /* --- box faces --- */
   .face{position:absolute;top:0;left:0}
@@ -579,12 +620,6 @@
   @media (hover:hover) and (pointer:fine){.pageFace .buy:hover{opacity:.55}}
   .pageFace .buy span{display:inline-block;transition:transform .2s ease}
   @media (hover:hover) and (pointer:fine){.pageFace .buy:hover span{transform:translateX(4px)}}
-  .pageFace .page-meta{
-    margin-top:18px;padding-top:14px;
-    border-top:1px solid rgba(26,25,24,.1);
-    font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--page-muted);
-    display:flex;justify-content:space-between;
-  }
 
   /* --- hinged front cover --- */
   .coverFlap{
@@ -592,7 +627,7 @@
     transform-style:preserve-3d;
     transform-origin:left center;
     transform:translateZ(calc(var(--d) / 2));
-    transition:transform .85s cubic-bezier(.3,.75,.25,1);
+    transition:transform .6s cubic-bezier(.3,.75,.25,1);
   }
   .book3d.opened .coverFlap{
     transform:translateZ(calc(var(--d) / 2)) rotateY(-165deg);
@@ -636,8 +671,56 @@
   .coverBack{
     transform:rotateY(180deg);
     background:var(--c);
-    filter:brightness(.94) saturate(.9);
     box-shadow:inset -8px 0 16px -8px rgba(0,0,0,.25);
+    display:flex;align-items:flex-end;justify-content:center;
+    padding:0 0 34px;
+  }
+  /* Inside the cover: a library pocket with its checkout card. */
+  .coverBack::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;
+    background:rgba(0,0,0,.08);pointer-events:none;
+  }
+  .pocket{
+    position:relative;width:78%;
+  }
+  /* The pocket's front covers only the blank foot of the card. */
+  .pocket::after{
+    content:"";position:absolute;left:-6px;right:-6px;bottom:-12px;height:62px;z-index:1;
+    background:#E9E1CD;
+    border-radius:2px 2px 3px 3px;
+    box-shadow:0 -1px 0 rgba(0,0,0,.05), 0 8px 16px -8px rgba(0,0,0,.45);
+    background-image:linear-gradient(transparent 14px, rgba(60,45,20,.14) 14px 15px, transparent 15px);
+  }
+  .card{
+    position:relative;z-index:0;
+    background:#FBF6E9;
+    color:#2A2620;
+    border-radius:2px;
+    padding:14px 16px 58px;
+    transform:rotate(-2deg);
+    box-shadow:0 2px 6px rgba(0,0,0,.18);
+    font-size:10px;
+  }
+  .card .card-head{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#8B7F68;
+    padding-bottom:8px;border-bottom:1px solid rgba(139,127,104,.35);
+  }
+  .card .card-title{
+    font-family:'Instrument Serif',serif;font-size:19px;line-height:1.15;
+    margin:10px 0 2px;color:#2A2620;
+  }
+  .card .card-author{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6E6452}
+  .card dl{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:5px 12px}
+  .card dt{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#8B7F68}
+  .card dd{font-size:10.5px;color:#2A2620;border-bottom:1px dotted rgba(139,127,104,.5);padding-bottom:3px}
+  .card .stamp{
+    position:absolute;right:12px;top:66px;
+    padding:4px 8px;
+    border:1.5px solid #C2410C;border-radius:3px;
+    color:#C2410C;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    transform:rotate(-9deg);opacity:.78;
+    mix-blend-mode:multiply;
   }
 
   /* shadow under the floating book */
@@ -692,6 +775,35 @@
   body.reading .site-nav a:focus-visible,body.reading .nav-close:focus-visible{color:#FDFCF8}
   @media (hover:hover) and (pointer:fine){body.reading .site-nav a:hover,body.reading .nav-close:hover{color:#FDFCF8}}
 
+  /* Previous / next while a book is open. */
+  .book-nav{
+    position:fixed;left:50%;bottom:max(24px, env(safe-area-inset-bottom));z-index:60;
+    display:flex;align-items:center;gap:6px;
+    transform:translate(-50%, 6px);opacity:0;pointer-events:none;
+    transition:opacity .2s ease, transform .3s cubic-bezier(.23,1,.32,1);
+    font-family:'Neue Haas','Space Grotesk',sans-serif;
+  }
+  .book-nav.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+  .book-nav button{
+    width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,.1);
+    background:rgba(28,27,24,.82);color:#E9E7E1;cursor:pointer;
+    display:grid;place-items:center;
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    transition:transform .16s ease-out, background-color .2s ease;
+  }
+  .book-nav button:active{transform:scale(.94)}
+  .book-nav button:focus-visible{outline:2px solid #f58404;outline-offset:3px}
+  @media (hover:hover) and (pointer:fine){.book-nav button:hover{background:rgba(48,47,43,.9)}}
+  .book-nav svg{width:16px;height:16px}
+  .book-nav .count{
+    min-width:64px;text-align:center;
+    font-size:12px;letter-spacing:.14em;color:#A0A09D;font-variant-numeric:tabular-nums;
+  }
+
+  /* The hint goes away once you've opened a book; the spark beside it stays. */
+  .hint-text{transition:opacity .4s ease}
+  body.has-opened .hint-text{opacity:0}
+
   /* cover type personalities mirror the spines */
   .t-kleon .cover-title{font-family:'Archivo';font-weight:900;text-transform:uppercase}
   .t-rubin .cover-title{font-family:'Instrument Serif',serif;letter-spacing:.16em;text-transform:uppercase;font-weight:400}
@@ -705,12 +817,20 @@
 
   @media (max-width:760px){
     :root{--bw:min(300px, 82vw);--bh:min(420px, 115vw)}
-    .shelf{transform:scale(.72);transform-origin:bottom center;min-height:260px}
-    .book3d.opened{transform:translate(0,0) rotateY(0) scale(.9) !important}
+    .shelf{transform:scale(.72);transform-origin:bottom center;min-height:260px;padding:0 24px}
+    /* Two pages side by side don't fit a portrait screen, so on phones the
+       cover swings up over the top edge instead (the open spread stacks
+       vertically and is scaled to fit in JS). */
+    .coverFlap{transform-origin:center top}
+    .book3d.opened .coverFlap{transform:translateZ(calc(var(--d) / 2)) rotateX(165deg)}
+    .coverBack{transform:rotateX(180deg);align-items:center;padding:0}
+    .pageFace{padding:30px 26px 24px}
   }
+  /* Reduced motion: no flying or swinging, but fades stay so changes don't
+     feel broken. */
   @media (prefers-reduced-motion:reduce){
-    *,*::before,*::after{transition:none !important;animation:none !important}
-    .book3d.moving{transition:none}
+    .book,.eyebrow,h1,.sub,.hint{animation:none !important}
+    .book3d.moving,.coverFlap,.book,.book-nav,.nav-close{transition-property:opacity !important}
   }
 </style>
   <!-- Agentation dev feedback toolbar — CDN-loaded, localhost only.
@@ -756,10 +876,20 @@
 
 <div class="shelf-wrap">
   <div class="shelf" id="shelf"></div>
-  <p class="hint">Click a spine to pull it off the shelf <button class="quest-item" data-quest="shelf" type="button"></button></p>
+  <p class="hint"><span class="hint-text">Click a spine to pull it off the shelf</span> <button class="quest-item" data-quest="shelf" type="button"></button></p>
 </div>
 
 <div class="backdrop" id="backdrop"></div>
+
+<div class="book-nav" id="bookNav" aria-label="Browse the shelf">
+  <button type="button" id="prevBook" aria-label="Previous book">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <span class="count" id="bookCount" aria-live="polite"></span>
+  <button type="button" id="nextBook" aria-label="Next book">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
 
 <div class="stage" id="stage" role="dialog" aria-modal="true" aria-label="Book detail">
   <div class="book3d" id="book3d">
@@ -770,7 +900,6 @@
       <p class="why-label">Why it's on my shelf</p>
       <p class="note" id="note"></p>
       <a class="buy" id="buyLink" href="#" target="_blank" rel="noopener">Get the book <span>→</span></a>
-      <div class="page-meta"><span id="metaGenre"></span><span id="metaYear"></span></div>
     </div>
     <div class="face coverFlap" id="coverFlap">
       <div class="coverFront" id="coverFront">
@@ -783,7 +912,21 @@
         </div>
         <p class="cover-year" id="coverYear"></p>
       </div>
-      <div class="coverBack"></div>
+      <div class="coverBack">
+        <div class="pocket">
+          <div class="card">
+            <p class="card-head"><span>Mena&rsquo;s copy</span><span id="cardNo"></span></p>
+            <p class="card-title" id="cardTitle"></p>
+            <p class="card-author" id="cardAuthor"></p>
+            <dl>
+              <dt>Shelved</dt><dd id="cardGenre"></dd>
+              <dt>Published</dt><dd id="cardYear"></dd>
+              <dt>Due back</dt><dd>Never</dd>
+            </dl>
+            <span class="stamp">Kept</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -824,7 +967,7 @@ const books = [
   },
   {
     id:'t-naval', title:'The almanack', author:'Naval Ravikant', year:'2020', genre:'Leverage',
-    isbn:'9781544514215',
+    coverSrc:'/images/books/9781544514215.jpg',
     c:'#F4F3EF', t:'#1B1B1B', w:32, h:274, fs:'16px', edge:'#F0EDE5',
     spineHTML:`<span class="spine-real sp-naval"><span class="n-title">The Almanack of Naval Ravikant</span><span class="n-author">Eric Jorgenson</span></span>`,
     note:'Seek wealth, not money — and build with leverage that works while you sleep. Naval reframed how I think about creative assets: make things once, let them compound. Half the book is about getting rich, the other half about staying happy. Read both halves.',
@@ -832,7 +975,7 @@ const books = [
   },
   {
     id:'t-alch', title:'The alchemist', author:'Paulo Coelho', year:'1988', genre:'The journey',
-    isbn:'9780062315007',
+    coverSrc:'/images/books/9780062315007.jpg',
     c:'#E4701E', t:'#3B2010', w:30, h:270, fs:'14px', edge:'#F3E7C8', back:'#1F5E75',
     spineHTML:`<span class="spine-real sp-alch"><span class="al-orn">✦</span><span class="al-author">Paulo Coelho</span><span class="al-title"><em>The</em> Alchemist</span><span class="al-orn">✦</span></span>`,
     note:'The book I hand to people at a crossroads. When you want something, all the universe conspires in helping you to achieve it — I read it young and it planted the idea that the detours are the point. Every re-read lands differently depending on where I am.',
@@ -848,7 +991,6 @@ const books = [
   },
   {
     id:'t-build', title:'Build', author:'Tony Fadell', year:'2022', genre:'Making things',
-    isbn:'9780063046061',
     c:'#F7F5F0', t:'#141414', w:40, h:302, fs:'22px', edge:'#E7A9A2',
     spineHTML:`<span class="spine-real sp-build"><span class="bs-author">Tony Fadell</span><span class="bs-title">Build</span><span class="bs-sub">An unorthodox guide to making things worth making</span><span class="bs-pub"></span></span>`,
     note:'Fadell built the iPod and the iPhone, and this reads like sitting next to him while he tells you everything he got wrong first. It\u2019s the most practical book on my shelf — opinionated, specific, zero fluff. Essential for anyone shipping actual products.',
@@ -866,8 +1008,14 @@ const books = [
 
 /* ---------- build shelf ---------- */
 const shelf = document.getElementById('shelf');
+const bookBtns = [];
+const bookendStart = document.createElement('span');
+bookendStart.className = 'bookend start';
+bookendStart.setAttribute('aria-hidden','true');
+shelf.appendChild(bookendStart);
 books.forEach((b, i)=>{
   const btn = document.createElement('button');
+  bookBtns.push(btn);
   btn.className = `book ${b.id}${b.lean ? ' leaning':''}`;
   btn.style.setProperty('--c', b.c);
   btn.style.setProperty('--t', b.t);
@@ -881,6 +1029,15 @@ books.forEach((b, i)=>{
   btn.addEventListener('click', ()=>openBook(b, btn));
   shelf.appendChild(btn);
 });
+const bookendEnd = document.createElement('span');
+bookendEnd.className = 'bookend end';
+bookendEnd.setAttribute('aria-hidden','true');
+shelf.appendChild(bookendEnd);
+
+// Speak the device's language: "Tap" on touch screens.
+if(window.matchMedia('(hover: none)').matches){
+  document.querySelector('.hint-text').textContent = 'Tap a spine to pull it off the shelf';
+}
 
 /* ---------- 3D open / close ---------- */
 const stage    = document.getElementById('stage');
@@ -907,6 +1064,8 @@ const coverUrl = isbn => `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg?de
 
 /* preload real covers so they're ready before the book turns */
 const coverCache = {};
+/* saved covers (public/images/books) — warm the cache so they're ready */
+books.forEach(b=>{ if(b.coverSrc){ const i = new Image(); i.src = b.coverSrc; } });
 books.forEach(b=>{
   if(!b.isbn) return;
   const img = new Image();
@@ -937,8 +1096,14 @@ function populate(b){
   document.getElementById('coverAuthor').textContent = b.author;
   document.getElementById('coverGenre').textContent = b.genre;
   document.getElementById('coverYear').textContent = b.year;
-  document.getElementById('metaGenre').textContent = b.genre;
-  document.getElementById('metaYear').textContent = b.year;
+  // The checkout card inside the cover.
+  const idx = books.indexOf(b);
+  document.getElementById('cardNo').textContent = 'No. ' + String(idx + 1).padStart(2,'0');
+  document.getElementById('cardTitle').textContent = b.title.charAt(0).toUpperCase() + b.title.slice(1);
+  document.getElementById('cardAuthor').textContent = b.author;
+  document.getElementById('cardGenre').textContent = b.genre;
+  document.getElementById('cardYear').textContent = b.year;
+  document.getElementById('bookCount').textContent = (idx + 1) + ' / ' + books.length;
   document.getElementById('note').textContent = b.note;
   document.getElementById('buyLink').href = b.link;
   document.getElementById('spineFace').innerHTML = b.spineHTML ||
@@ -965,110 +1130,193 @@ function populate(b){
   }
 }
 
+const bookNav = document.getElementById('bookNav');
+const isPhone = ()=>window.matchMedia('(max-width:760px)').matches;
+let activeIndex = -1;
+
+/* Where the open book sits. On phones the spread stacks vertically (the
+   cover swings up), so it is scaled to fit and nudged down to stay centred. */
+function openedTransform(){
+  if(!isPhone()) return 'translateX(22%) rotateY(0deg) scale(1)';
+  // Fit the stacked spread between the top bar (~52px) and the browse
+  // buttons (~92px), with a little air, and centre it in that space.
+  const bh = book3d.offsetHeight;
+  const top = 52, bottom = 92, air = 24;
+  const room = window.innerHeight - top - bottom - air;
+  const s = Math.min(.92, room / (bh * 2));
+  const shift = (top - bottom) / 2;               // centre of the free space
+  return `translateY(${(bh * s) / 2 + shift}px) rotateY(0deg) scale(${s})`;
+}
+
+function shelfTransform(btn){
+  const rect = btn.getBoundingClientRect();
+  const s = rect.height / book3d.offsetHeight;
+  const dx = (rect.left + rect.width/2) - window.innerWidth/2;
+  const dy = (rect.top + rect.height/2) - window.innerHeight/2;
+  return `translate(${dx}px, ${dy}px) rotateY(90deg) scale(${s})`;
+}
+
+function showOpened(){
+  book3d.style.transform = openedTransform();
+  book3d.classList.add('opened');
+  closeBtn.classList.add('show');
+  bookNav.classList.add('show');
+}
+
 function openBook(b, btn){
   if(phase !== 'idle') return;
   phase = 'open';
   activeBtn = btn;
+  activeIndex = books.indexOf(b);
   populate(b);
-
-  const rect = btn.getBoundingClientRect();
-  const vw = window.innerWidth, vh = window.innerHeight;
-
   stage.classList.add('on');
-  // Lock background scroll + flag reading so the nav lifts off the backdrop.
   document.body.style.overflow = 'hidden';
-  document.body.classList.add('reading');
-  const bh = book3d.offsetHeight;
-  const s = rect.height / bh;
-  const dx = (rect.left + rect.width/2) - vw/2;
-  const dy = (rect.top + rect.height/2) - vh/2;
-
-  startTransform = `translate(${dx}px, ${dy}px) rotateY(90deg) scale(${s})`;
-
+  document.body.classList.add('reading','has-opened');
+  startTransform = shelfTransform(btn);
+  book3d.classList.remove('closing');
   if(reduceMotion){
     btn.classList.add('taken');
     backdrop.classList.add('show');
-    book3d.style.transform = 'translateX(12%) rotateY(0deg) scale(1)';
-    book3d.classList.add('opened');
-    closeBtn.classList.add('show');
+    showOpened();
+    closeBtn.focus();
     return;
   }
-
-  // place at spine, invisible original
   book3d.classList.remove('moving');
   book3d.style.transform = startTransform;
   btn.classList.add('taken');
   backdrop.classList.add('show');
-
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
       if(phase !== 'open') return;   // a close interrupted us before this frame
       book3d.classList.add('moving');
-      // fly to centre, turn to face the reader
       book3d.style.transform = 'translate(0px, 0px) rotateY(0deg) scale(1)';
+      // The cover starts to swing before the book has fully landed, so the
+      // pull and the open read as one motion.
       openTimer = setTimeout(()=>{
         openTimer = null;
-        // shift right as the cover swings open, so composition stays centred
-        book3d.style.transform = 'translateX(22%) rotateY(0deg) scale(1)';
-        book3d.classList.add('opened');
-        closeBtn.classList.add('show');
+        showOpened();
         closeBtn.focus();
-      }, 780);
+      }, 380);
     });
   });
 }
 
 function closeBook(){
-  if(phase !== 'open') return;   // only closeable from the open phase
+  if(phase !== 'open') return;
   phase = 'closing';
-  clearOpenClose();              // cancel any pending open step
+  clearOpenClose();
   const btn = activeBtn;
   closeBtn.classList.remove('show');
-
+  bookNav.classList.remove('show');
   const finish = ()=>{
     stage.classList.remove('on');
     backdrop.classList.remove('show');
-    book3d.classList.remove('moving');
+    book3d.classList.remove('moving','closing');
     btn.classList.remove('taken');
     document.body.style.overflow = '';
     document.body.classList.remove('reading');
     btn.focus();
     activeBtn = null;
+    activeIndex = -1;
     phase = 'idle';
   };
-
   if(reduceMotion){
     book3d.classList.remove('opened');
     finish();
     return;
   }
-
-  const wasOpened = book3d.classList.contains('opened');
-  book3d.classList.add('moving');
+  // Cover closes while the book flies home: one quick motion, not two.
+  startTransform = shelfTransform(btn);
+  book3d.classList.add('moving','closing');
   book3d.classList.remove('opened');
-
-  const flyBack = ()=>{
-    book3d.style.transform = startTransform;      // fly back to the shelf slot
-    closeTimers.push(setTimeout(finish, 760));
-  };
-
-  if(wasOpened){
-    // 1. close the cover, then 2. fly back
-    book3d.style.transform = 'translate(0px, 0px) rotateY(0deg) scale(1)';
-    closeTimers.push(setTimeout(flyBack, 620));
-  } else {
-    // interrupted mid-open — skip the cover step and fly straight back
-    flyBack();
-  }
+  book3d.style.transform = startTransform;
+  closeTimers.push(setTimeout(finish, 440));
 }
+
+/* Previous / next while a book is open. Keyboard swaps are instant; buttons
+   and swipes get a short slide in the direction of travel. */
+let swapping = false;
+function go(dir, instant){
+  if(phase !== 'open' || !book3d.classList.contains('opened') || swapping) return;
+  const next = (activeIndex + dir + books.length) % books.length;
+  const apply = ()=>{
+    activeBtn.classList.remove('taken');
+    activeIndex = next;
+    activeBtn = bookBtns[next];
+    activeBtn.classList.add('taken');
+    populate(books[next]);
+    book3d.classList.add('opened');
+    book3d.style.transform = openedTransform();
+  };
+  if(instant || reduceMotion){ apply(); return; }
+  swapping = true;
+  const base = openedTransform();
+  book3d.classList.remove('moving');
+  book3d.style.transition = 'transform .16s cubic-bezier(.4,0,1,1), opacity .16s ease';
+  book3d.style.transform = `translateX(${-dir * 40}px) ` + base;
+  book3d.style.opacity = '0';
+  setTimeout(()=>{
+    book3d.style.transition = 'none';
+    apply();
+    book3d.style.transform = `translateX(${dir * 40}px) ` + openedTransform();
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      book3d.style.transition = 'transform .24s cubic-bezier(.23,1,.32,1), opacity .2s ease';
+      book3d.style.transform = openedTransform();
+      book3d.style.opacity = '1';
+      setTimeout(()=>{ book3d.style.transition = ''; swapping = false; }, 250);
+    }));
+  }, 160);
+}
+document.getElementById('prevBook').addEventListener('click', ()=>go(-1));
+document.getElementById('nextBook').addEventListener('click', ()=>go(1));
+
+/* Swipe sideways on the open book to browse. It follows the finger (with
+   resistance), and a short flick counts as much as a long drag. */
+(function(){
+  let x0 = 0, t0 = 0, dx = 0, tracking = false, moved = false;
+  book3d.addEventListener('pointerdown', e=>{
+    if(phase !== 'open' || !book3d.classList.contains('opened') || swapping) return;
+    if(e.pointerType === 'mouse') return;   // mouse users have the buttons and keys
+    tracking = true; moved = false; x0 = e.clientX; t0 = e.timeStamp; dx = 0;
+  });
+  book3d.addEventListener('pointermove', e=>{
+    if(!tracking) return;
+    dx = e.clientX - x0;
+    if(Math.abs(dx) > 8) moved = true;
+    if(!moved) return;
+    book3d.style.transition = 'none';
+    book3d.style.transform = `translateX(${dx * .5}px) ` + openedTransform();
+  });
+  const end = ()=>{
+    if(!tracking) return;
+    tracking = false;
+    if(!moved) return;
+    const v = Math.abs(dx) / Math.max(1, performance.now() - t0);
+    book3d.style.transition = 'transform .24s cubic-bezier(.23,1,.32,1)';
+    book3d.style.transform = openedTransform();
+    setTimeout(()=>{ book3d.style.transition = ''; }, 250);
+    if(Math.abs(dx) > 60 || v > .4) go(dx < 0 ? 1 : -1);
+  };
+  book3d.addEventListener('pointerup', end);
+  book3d.addEventListener('pointercancel', end);
+  book3d.style.touchAction = 'pan-y';
+})();
 
 closeBtn.addEventListener('click', closeBook);
 backdrop.addEventListener('click', closeBook);
 document.addEventListener('keydown', e=>{
+  if(phase === 'open' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')){
+    e.preventDefault();
+    go(e.key === 'ArrowRight' ? 1 : -1, true);
+    return;
+  }
   if(e.key !== 'Escape') return;
   // Esc closes/cancels an open book first; if nothing is open, it goes home.
   if(phase === 'open'){ closeBook(); }
   else if(phase === 'idle'){ window.location.href = '/'; }
+});
+window.addEventListener('resize', ()=>{
+  if(phase === 'open' && book3d.classList.contains('opened')) book3d.style.transform = openedTransform();
 });
 </script>
   <script type="module">

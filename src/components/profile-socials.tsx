@@ -107,6 +107,8 @@ export function ProfileSocials() {
     d.lastT = e.timeStamp;
     d.dx = d.velocity = 0;
     e.currentTarget.setPointerCapture(e.pointerId);
+    // Dragging must not select the headline text underneath.
+    document.documentElement.style.userSelect = "none";
     // Tracking is instant — no transition while the finger is down.
     e.currentTarget.style.transition = "none";
     setEngaged(true);
@@ -130,6 +132,7 @@ export function ProfileSocials() {
     const d = drag.current;
     if (!d.active) return;
     d.active = false;
+    document.documentElement.style.userSelect = "";
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -198,7 +201,7 @@ export function ProfileSocials() {
               target="_blank"
               rel="noreferrer"
               aria-label={s.label}
-              className="group/social relative flex size-[37px] before:absolute before:-inset-1 before:content-[''] shrink-0 items-center justify-center rounded-full bg-surface-2 transition-[background-color,transform] duration-200 ease-out hover:scale-105 hover:bg-white/[0.12] active:scale-95"
+              className="group/social relative flex size-[37px] before:absolute before:-inset-1 before:content-[''] shrink-0 items-center justify-center rounded-full bg-surface-2 transition-[background-color,transform] duration-200 ease-out hover:scale-105 hover:bg-rule-strong active:scale-95"
             >
               <img
                 src={`/images/${s.icon}.svg`}

@@ -147,6 +147,11 @@
   .footnote{
     position:fixed;left:50%;bottom:28px;transform:translateX(-50%);
     z-index:6;pointer-events:none;
+    /* a soft backing so it stays readable when a photo drifts underneath */
+    padding:7px 10px 7px 16px;border-radius:999px;
+    background:rgba(16,16,16,.62);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    white-space:nowrap;
     font-size:13px;letter-spacing:.06em;color:var(--cream-dim);
     text-shadow:0 1px 10px rgba(0,0,0,.85);
   }
